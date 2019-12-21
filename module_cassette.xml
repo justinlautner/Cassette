@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_cassette" default="compile.module.cassette">
+  <dirname property="module.cassette.basedir" file="${ant.file.module_cassette}"/>
+  
+  <property name="module.jdk.home.cassette" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.cassette" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.cassette" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.cassette" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="cassette.output.dir" value="${module.cassette.basedir}/target/classes"/>
+  <property name="cassette.testoutput.dir" value="${module.cassette.basedir}/target/test-classes"/>
+  
+  <path id="cassette.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="cassette.module.production.classpath">
+    <path refid="${module.jdk.classpath.cassette}"/>
+    <path refid="library.openjfx.classpath"/>
+    <path refid="library.jflac-1.3.classpath"/>
+    <path refid="library.jaudiotagger.classpath"/>
+  </path>
+  
+  <path id="cassette.runtime.production.module.classpath">
+    <pathelement location="${cassette.output.dir}"/>
+    <path refid="library.openjfx.classpath"/>
+    <path refid="library.jflac-1.3.classpath"/>
+    <path refid="library.jaudiotagger.classpath"/>
+  </path>
+  
+  <path id="cassette.module.classpath">
+    <path refid="${module.jdk.classpath.cassette}"/>
+    <pathelement location="${cassette.output.dir}"/>
+    <path refid="library.openjfx.classpath"/>
+    <path refid="library.jflac-1.3.classpath"/>
+    <path refid="library.jaudiotagger.classpath"/>
+  </path>
+  
+  <path id="cassette.runtime.module.classpath">
+    <pathelement location="${cassette.testoutput.dir}"/>
+    <pathelement location="${cassette.output.dir}"/>
+    <path refid="library.openjfx.classpath"/>
+    <path refid="library.jflac-1.3.classpath"/>
+    <path refid="library.jaudiotagger.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.cassette">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.cassette">
+    <patternset refid="excluded.from.module.cassette"/>
+  </patternset>
+  
+  <path id="cassette.module.sourcepath">
+    <dirset dir="${module.cassette.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="cassette.module.test.sourcepath">
+    <dirset dir="${module.cassette.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.cassette" depends="compile.module.cassette.production,compile.module.cassette.tests" description="Compile module Cassette"/>
+  
+  <target name="compile.module.cassette.production" depends="register.custom.compilers" description="Compile module Cassette; production classes">
+    <mkdir dir="${cassette.output.dir}"/>
+    <javac2 destdir="${cassette.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.cassette}/javac">
+      <compilerarg line="${compiler.args.cassette}"/>
+      <bootclasspath refid="cassette.module.bootclasspath"/>
+      <classpath refid="cassette.module.production.classpath"/>
+      <src refid="cassette.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.cassette"/>
+    </javac2>
+    
+    <copy todir="${cassette.output.dir}">
+      <fileset dir="${module.cassette.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.cassette.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.cassette.tests" depends="register.custom.compilers,compile.module.cassette.production" description="compile module Cassette; test classes" unless="skip.tests">
+    <mkdir dir="${cassette.testoutput.dir}"/>
+    <javac2 destdir="${cassette.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.cassette}/javac">
+      <compilerarg line="${compiler.args.cassette}"/>
+      <bootclasspath refid="cassette.module.bootclasspath"/>
+      <classpath refid="cassette.module.classpath"/>
+      <src refid="cassette.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.cassette"/>
+    </javac2>
+    
+    <copy todir="${cassette.testoutput.dir}">
+      <fileset dir="${module.cassette.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.cassette" description="cleanup module">
+    <delete dir="${cassette.output.dir}"/>
+    <delete dir="${cassette.testoutput.dir}"/>
+  </target>
+</project>
