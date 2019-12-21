@@ -69,6 +69,9 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
       <MavenImportingSettings>
@@ -79,6 +82,7 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectId" id="1Rqaru1O3rLCyZWj9Vqa8L7Vlf6" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
