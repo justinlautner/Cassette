@@ -61,7 +61,7 @@ public class AddFileDirectorys {
     //TODO: Decide what type of data structure to use to hold songs/albums
     //TODO: Should a song object inherit from album class? Or vice versa?
     //TODO: Add ScrollPanes to Splitpane
-    //TODO:
+    //TODO: Figure out how to get metadata, such as file type and length
     private void getMusic(File file) throws TagException, ReadOnlyFileException, CannotReadException, InvalidAudioFrameException, IOException {
         File[] listOfFiles = file.listFiles();
 
