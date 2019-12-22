@@ -1,8 +1,6 @@
 package MainPackage;
 
 import AddFileDirectory.AddFileDirectorys;
-import AddFileDirectory.AlbumArtwork;
-import AddFileDirectory.Genres;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
@@ -21,7 +19,7 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
-    private AnchorPane anchorPane, leftAnchorPane;
+    private AnchorPane anchorPane;
     @FXML
     private VBox vBox;
     @FXML
@@ -38,15 +36,6 @@ public class Controller implements Initializable {
     @FXML
     private void addFiles() throws IOException, ReadOnlyFileException, TagException, InvalidAudioFrameException, CannotReadException {
 
-        /*FileChooser chooser = new FileChooser();
-        chooser.setTitle("Choose a Directory to add");
-        File defaultDirectory = new File(System.getProperty("user.home"));
-        chooser.setInitialDirectory(defaultDirectory);
-        File chosenFolder = chooser.showOpenDialog(anchorPane.getScene().getWindow());
-
-        Thread thread = new Thread(new PlaySong(chosenFolder.toString()));
-        thread.start();*/
-
         //Open directory chooser to add files
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Choose a Directory to add");
@@ -54,24 +43,11 @@ public class Controller implements Initializable {
         chooser.setInitialDirectory(defaultDirectory);
         File chosenFolder = chooser.showDialog(anchorPane.getScene().getWindow());
 
-        //listOfFiles = chosenFolder.listFiles();
-
-
-        /*if (chosenFolder != null){
-            Genres genres = new Genres(chosenFolder, vBox);
-            AlbumArtwork albumArtwork = new AlbumArtwork(chosenFolder, tilePane);
-            genres.run();
-            albumArtwork.run();
-        }*/
         //If user chose a folder, commence search for music
         if (chosenFolder != null){
             AddFileDirectorys addFileDirectorys = new AddFileDirectorys(chosenFolder, vBox, tilePane);
-            addFileDirectorys.populatePlayer();
+            addFileDirectorys.start();
         }
-
-
-        /*getGenres(chosenFolder);
-        getGenreList();*/
 
     }
 
