@@ -39,7 +39,7 @@ public class Controller implements Initializable {
         //Open directory chooser to add files
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Choose a Directory to add");
-        File defaultDirectory = new File(System.getProperty("user.home"));
+        File defaultDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator")+ "Music");
         chooser.setInitialDirectory(defaultDirectory);
         File chosenFolder = chooser.showDialog(anchorPane.getScene().getWindow());
 

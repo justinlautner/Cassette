@@ -1,7 +1,5 @@
 package AddFileDirectory;
 
-import org.jaudiotagger.tag.images.Artwork;
-
 public class Song {
 
     private String filepath;
@@ -14,9 +12,8 @@ public class Song {
     private String year;
     private String lyrics;
     private String discNum;
-    private Artwork artwork;
 
-    Song(String filepath, String track, String title, String artist, String albumArtist, String album, String year, String lyrics, String genre, String discNum, Artwork artwork){
+    Song(String filepath, String track, String title, String artist, String albumArtist, String album, String year, String lyrics, String genre, String discNum){
         this.filepath = filepath;
         this.track = track;
         this.title = title;
@@ -27,7 +24,6 @@ public class Song {
         this.discNum = discNum;
         this.year = year;
         this.lyrics = lyrics;
-        this.artwork = artwork;
     }
 
     public String getFilepath(){
@@ -70,7 +66,5 @@ public class Song {
         return discNum;
     }
 
-    public Artwork getArtwork() {
-        return artwork;
-    }
+
 }

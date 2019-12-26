@@ -7,19 +7,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/AddFileDirectory/AddFileDirectorys.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AddFileDirectory/AddFileDirectorys.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/AddFileDirectory/AlbumArtwork.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/AddFileDirectory/Genres.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/AddFileDirectory/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AddFileDirectory/Song.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/MainPackage/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MainPackage/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/AddFileDirectory/AddFileDirectorys.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AddFileDirectory/AddFileDirectorys.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/AddFileDirectory/Album.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AddFileDirectory/Album.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/AddFileDirectory/AlbumArtwork.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/AddFileDirectory/Genres.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/AddFileDirectory/Song.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AddFileDirectory/Song.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MainPackage/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MainPackage/Controller.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -303,26 +296,26 @@
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
     <state x="1873" y="851" width="907" height="476" key="FileChooserDialogImpl/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1576976315744" />
-    <state x="2823" y="1011" key="Github.CreateGistDialog" timestamp="1576978655263">
+    <state x="2823" y="1011" key="Github.CreateGistDialog" timestamp="1577137588359">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state x="2823" y="1011" key="Github.CreateGistDialog/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1576978655263" />
-    <state width="1863" height="635" key="GridCell.Tab.0.bottom" timestamp="1576978665553">
+    <state x="2823" y="1011" key="Github.CreateGistDialog/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577137588359" />
+    <state width="3727" height="635" key="GridCell.Tab.0.bottom" timestamp="1577400266329">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="1863" height="635" key="GridCell.Tab.0.bottom/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1576978665553" />
-    <state width="1863" height="635" key="GridCell.Tab.0.center" timestamp="1576978665553">
+    <state width="3727" height="635" key="GridCell.Tab.0.bottom/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577400266329" />
+    <state width="3727" height="635" key="GridCell.Tab.0.center" timestamp="1577400266329">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="1863" height="635" key="GridCell.Tab.0.center/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1576978665553" />
-    <state width="1863" height="635" key="GridCell.Tab.0.left" timestamp="1576978665553">
+    <state width="3727" height="635" key="GridCell.Tab.0.center/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577400266329" />
+    <state width="3727" height="635" key="GridCell.Tab.0.left" timestamp="1577400266329">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="1863" height="635" key="GridCell.Tab.0.left/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1576978665553" />
-    <state width="1863" height="635" key="GridCell.Tab.0.right" timestamp="1576978665553">
+    <state width="3727" height="635" key="GridCell.Tab.0.left/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577400266329" />
+    <state width="3727" height="635" key="GridCell.Tab.0.right" timestamp="1577400266329">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="1863" height="635" key="GridCell.Tab.0.right/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1576978665553" />
+    <state width="3727" height="635" key="GridCell.Tab.0.right/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577400266329" />
     <state width="1840" height="776" key="GridCell.Tab.1.bottom" timestamp="1576717258839">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>

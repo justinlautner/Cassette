@@ -1,9 +1,11 @@
 package AddFileDirectory;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.CacheHint;
+import javafx.scene.Group;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
@@ -16,16 +18,12 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.images.Artwork;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.Collator;
 import java.util.*;
 
 public class AddFileDirectorys extends Thread {
 
-    //TODO: implement vertical scroll for splitpane
     //TODO: figure out save format for library for reuse
     private File chosenDirectory;
     private VBox vBox;
@@ -56,7 +54,6 @@ public class AddFileDirectorys extends Thread {
     //TODO: Add ScrollPanes to Splitpane
     //TODO: Figure out how to get metadata, such as file type and length
     //TODO: Save state of application for reload
-    //TODO: Solve memory leak caused by recursion
     private void getMusic(File file) {
         File[] listOfFiles = file.listFiles();
 
@@ -97,10 +94,9 @@ public class AddFileDirectorys extends Thread {
             String album = tag.getFirst(FieldKey.ALBUM);
             String year = tag.getFirst(FieldKey.YEAR);
             String lyrics = tag.getFirst(FieldKey.LYRICS);
-            Artwork artwork = tag.getFirstArtwork();
 
             //Create song object with relevant tags embedded
-            Song song = new Song(filePath, track, title, artist, albumArtist, album, year, lyrics, genre, discNum, artwork);
+            Song song = new Song(filePath, track, title, artist, albumArtist, album, year, lyrics, genre, discNum);
             songLinkedList.add(song);
         } catch (CannotReadException e) {
             e.printStackTrace();
@@ -151,17 +147,49 @@ public class AddFileDirectorys extends Thread {
 
         //Add toggle buttons for album artworks, to allow user to search and play music by them
         //TODO: Allow ToggleButtons to drop song list for that album, to choose from
+        //TODO: Speed up use of album covers
+        //TODO: Create empty covers for songs that do not have one on file
         for (Song song : songLinkedList) {
             if (albums.contains(song.getAlbum())) {
-                ToggleButton toggleButton = new ToggleButton();
-                Image image = new Image(new ByteArrayInputStream(song.getArtwork().getBinaryData()));
-                ImageView imageView = new ImageView();
-                toggleButton.setGraphic(imageView);
-                imageView.setFitHeight(150);
-                imageView.setFitWidth(150);
-                imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
-                tilePane.getChildren().add(toggleButton);
-                albums.remove(song.getAlbum());
+                try{
+                    //ToggleButton toggleButton = new ToggleButton();
+
+                    File file = new File(song.getFilepath());
+                    AudioFile f = AudioFileIO.read(file);
+                    Tag tag = f.getTag();
+
+                    byte[] contents = tag.getFirstArtwork().getBinaryData();
+
+                    Group albumCovers = new Group();
+                    albumCovers.setCache(true);
+                    albumCovers.setCacheHint(CacheHint.SPEED);
+
+                    //Image image = new Image(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData()));
+                    Image image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)));
+                    //Image image = new Image(Arrays.toString(contents));
+
+                    ImageView imageView = new ImageView(image);
+                    imageView.setCache(true);
+                    imageView.setCacheHint(CacheHint.SPEED);
+                    //toggleButton.setGraphic(imageView);
+                    imageView.setFitHeight(150);
+                    imageView.setFitWidth(150);
+                    //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
+                    tilePane.getChildren().add(imageView);
+                    albums.remove(song.getAlbum());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (CannotReadException e) {
+                    e.printStackTrace();
+                } catch (ReadOnlyFileException e) {
+                    e.printStackTrace();
+                } catch (TagException e) {
+                    e.printStackTrace();
+                } catch (InvalidAudioFrameException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
         }
 
