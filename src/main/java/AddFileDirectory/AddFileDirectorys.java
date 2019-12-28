@@ -147,7 +147,6 @@ public class AddFileDirectorys extends Thread {
 
         //Add toggle buttons for album artworks, to allow user to search and play music by them
         //TODO: Allow ToggleButtons to drop song list for that album, to choose from
-        //TODO: Speed up use of album covers
         //TODO: Create empty covers for songs that do not have one on file
         for (Song song : songLinkedList) {
             if (albums.contains(song.getAlbum())) {
@@ -165,15 +164,15 @@ public class AddFileDirectorys extends Thread {
                     albumCovers.setCacheHint(CacheHint.SPEED);
 
                     //Image image = new Image(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData()));
-                    Image image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)));
+                    Image image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true);
                     //Image image = new Image(Arrays.toString(contents));
 
                     ImageView imageView = new ImageView(image);
                     imageView.setCache(true);
                     imageView.setCacheHint(CacheHint.SPEED);
                     //toggleButton.setGraphic(imageView);
-                    imageView.setFitHeight(150);
-                    imageView.setFitWidth(150);
+                    /*imageView.setFitHeight(150);
+                    imageView.setFitWidth(150);*/
                     //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
                     tilePane.getChildren().add(imageView);
                     albums.remove(song.getAlbum());
