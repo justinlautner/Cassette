@@ -1,15 +1,15 @@
 package AddFileDirectory;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
-import javafx.scene.Group;
-import javafx.scene.effect.Effect;
-import javafx.scene.effect.Lighting;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -18,6 +18,8 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+
+import javax.swing.*;
 import java.io.*;
 import java.text.Collator;
 import java.util.*;
@@ -28,13 +30,19 @@ public class AddFileDirectorys extends Thread {
     private File chosenDirectory;
     private VBox vBox;
     private TilePane tilePane;
+    private ProgressBar progressBar;
     private LinkedList<Song> songLinkedList = new LinkedList<>();
+    private LinkedList<Album> albumLinkedList = new LinkedList<>();
+    private String compareString = "";
+    private ArrayList<String> genres = new ArrayList<>();
+    private ArrayList<String> albums = new ArrayList<>();
 
-    public AddFileDirectorys(File file, VBox vBox, TilePane tilePane){
+    public AddFileDirectorys(File file, VBox vBox, TilePane tilePane, ProgressBar progressBar){
 
         this.chosenDirectory = file;
         this.vBox = vBox;
         this.tilePane = tilePane;
+        this.progressBar = progressBar;
 
     }
 
@@ -51,9 +59,9 @@ public class AddFileDirectorys extends Thread {
 
     //TODO: Decide what type of data structure to use to hold songs/albums [HashTable to allow for fast playing of song?/Finding of file?] [Possibly Queue and Hashtable?] [Use PriorityQueue to gather songs, but then a Hashtable of them to save and use beyond that?]
     //TODO: Should a song object inherit from album class? Or vice versa?
-    //TODO: Add ScrollPanes to Splitpane
     //TODO: Figure out how to get metadata, such as file type and length
     //TODO: Save state of application for reload
+    //TODO: Decide: Have class objects to hold pre-sorted groups? (album, artist, genre, etc) or sort on call?
     private void getMusic(File file) {
         File[] listOfFiles = file.listFiles();
 
@@ -86,6 +94,9 @@ public class AddFileDirectorys extends Thread {
             //Get all relevant tags
             String filePath = fil.toString();
             String genre = tag.getFirst(FieldKey.GENRE);
+            if (!tag.hasField(FieldKey.GENRE)){
+                genre = "unknown";
+            }
             String track = tag.getFirst(FieldKey.TRACK);
             String title = tag.getFirst(FieldKey.TITLE);
             String discNum = tag.getFirst(FieldKey.DISC_NO);
@@ -95,9 +106,21 @@ public class AddFileDirectorys extends Thread {
             String year = tag.getFirst(FieldKey.YEAR);
             String lyrics = tag.getFirst(FieldKey.LYRICS);
 
+            if (!compareString.equals(album)){
+
+            }
+
             //Create song object with relevant tags embedded
             Song song = new Song(filePath, track, title, artist, albumArtist, album, year, lyrics, genre, discNum);
             songLinkedList.add(song);
+
+            //Divide songs and genres into their own groups
+            if (!genres.contains(song.getGenre())) {
+                genres.add(song.getGenre());
+            }
+            if (!albums.contains(song.getAlbum())) {
+                albums.add(song.getAlbum());
+            }
         } catch (CannotReadException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -115,15 +138,16 @@ public class AddFileDirectorys extends Thread {
     private void setMusicScene(){
 
         //Create arrays for genres and albums, in order to prevent printing duplicate album covers
-        ArrayList<String> genres = new ArrayList<>();
-        ArrayList<String> albums = new ArrayList<>();
+        /*ArrayList<String> genres = new ArrayList<>();
+        ArrayList<String> albums = new ArrayList<>();*/
 
         //Sort songs by album artist, as is my preferance
         //TODO: Edit this sort to allow user to change comparators, e.g. album or year
-        songLinkedList.sort((song, t1) -> Collator.getInstance().compare(song.getAlbumArtist(), t1.getAlbumArtist()));
+        //songLinkedList.sort((song, t1) -> Collator.getInstance().compare(song.getAlbumArtist(), t1.getAlbumArtist()));
 
+        songLinkedList.sort((song, t1) -> Collator.getInstance().compare(song.getAlbumArtist(), t1.getAlbumArtist()));
         //Iterate through songs and instantiate arrays
-        for (Song song : songLinkedList) {
+        /*for (Song song : songLinkedList) {
             if (!genres.contains(song.getGenre())) {
                 genres.add(song.getGenre());
             }
@@ -131,14 +155,19 @@ public class AddFileDirectorys extends Thread {
                 albums.add(song.getAlbum());
             }
 
-        }
+        }*/
 
         //sort genres for alphabetical ordering
         Collections.sort(genres);
         //Create ToggleButtons for each genre
         //TODO: Allow genre ToggleButtons to be opened and used to find new music to add to playlist
         for (String s: genres){
-            javafx.scene.control.ToggleButton toggleButton = new javafx.scene.control.ToggleButton();
+            ToggleButton toggleButton = new ToggleButton();
+            Image check = new Image("images/check.png", 10, 10, true, true);
+            Image unCheck = new Image("images/uncheck.png", 10, 10, true, true);
+            ImageView imageView = new ImageView();
+            imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(check).otherwise(unCheck));
+            toggleButton.setGraphic(imageView);
             toggleButton.setText(s);
             toggleButton.getStyleClass().add("styleClass.css");
             toggleButton.setAlignment(Pos.CENTER);
@@ -147,7 +176,10 @@ public class AddFileDirectorys extends Thread {
 
         //Add toggle buttons for album artworks, to allow user to search and play music by them
         //TODO: Allow ToggleButtons to drop song list for that album, to choose from
-        //TODO: Create empty covers for songs that do not have one on file
+        System.out.println(albums);
+        /*double progress = 0;
+        progressBar.setVisible(true);
+        progressBar.setProgress(progress);*/
         for (Song song : songLinkedList) {
             if (albums.contains(song.getAlbum())) {
                 try{
@@ -157,24 +189,70 @@ public class AddFileDirectorys extends Thread {
                     AudioFile f = AudioFileIO.read(file);
                     Tag tag = f.getTag();
 
-                    byte[] contents = tag.getFirstArtwork().getBinaryData();
+                    //If album does not have a cover, provide a default picture
+                    if (!tag.hasField(FieldKey.COVER_ART)){
+                        //File photo = new File(String.valueOf(getClass().getClassLoader().getResourceAsStream("/resources/images/empty.jpeg")));
+                        Image image = new Image("images/empty.jpeg", 150, 150, true, true);
+                        ImageView imageView = new ImageView(image);
+                        imageView.setCache(true);
+                        imageView.setCacheHint(CacheHint.SPEED);
 
-                    Group albumCovers = new Group();
+                        ToggleButton toggleButton = new ToggleButton(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
+                        toggleButton.setContentDisplay(ContentDisplay.TOP);
+                        toggleButton.setGraphic(imageView);
+                        toggleButton.setMaxWidth(150);
+                        toggleButton.setAlignment(Pos.BASELINE_LEFT);
+                        imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
+                        tilePane.getChildren().add(toggleButton);
+                    }
+                    else{
+                        byte[] contents = tag.getFirstArtwork().getBinaryData();
+                        Image image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true);
+                        ImageView imageView = new ImageView(image);
+                        imageView.setCache(true);
+                        imageView.setCacheHint(CacheHint.SPEED);
+
+                        ToggleButton toggleButton = new ToggleButton(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
+                        toggleButton.setContentDisplay(ContentDisplay.TOP);
+                        toggleButton.setGraphic(imageView);
+                        toggleButton.setMaxWidth(150);
+                        imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
+
+                        /*Label label = new Label();
+                        label.setMaxWidth(150);
+                        label.setAlignment(Pos.CENTER);
+                        label.setGraphic(imageView);
+                        label.setText("\n" + song.getAlbumArtist() + "\n" + song.getAlbum());*/
+                        /*Label label1 = new Label();
+                        label1.setText(song.getAlbum());*/
+                        //toggleButton.setTextAlignment(TextAlignment.CENTER);
+                        //toggleButton.setWrapText(true);
+                        //toggleButton.setText(song.getAlbumArtist() + "\n" + song.getAlbum());
+
+                        /*tilePane.getChildren().add(toggleButton);
+                        tilePane.getChildren().add(label);*/
+                        tilePane.getChildren().add(toggleButton);
+                    }
+
+                    /*progress = (double) songLinkedList.indexOf(song)/songLinkedList.size();
+                    progressBar.setProgress(progress);*/
+
+                    /*Group albumCovers = new Group();
                     albumCovers.setCache(true);
-                    albumCovers.setCacheHint(CacheHint.SPEED);
+                    albumCovers.setCacheHint(CacheHint.SPEED);*/
 
                     //Image image = new Image(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData()));
-                    Image image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true);
+
                     //Image image = new Image(Arrays.toString(contents));
 
-                    ImageView imageView = new ImageView(image);
+                    /*ImageView imageView = new ImageView(image);
                     imageView.setCache(true);
                     imageView.setCacheHint(CacheHint.SPEED);
                     //toggleButton.setGraphic(imageView);
-                    /*imageView.setFitHeight(150);
-                    imageView.setFitWidth(150);*/
+                    *//*imageView.setFitHeight(150);
+                    imageView.setFitWidth(150);*//*
                     //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
-                    tilePane.getChildren().add(imageView);
+                    tilePane.getChildren().add(imageView);*/
                     albums.remove(song.getAlbum());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -193,6 +271,7 @@ public class AddFileDirectorys extends Thread {
         }
 
         System.out.println("ALL DONE :)");
+        progressBar.setVisible(false);
     }
 
 

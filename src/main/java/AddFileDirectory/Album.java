@@ -1,21 +1,36 @@
 package AddFileDirectory;
 
-import org.jaudiotagger.tag.images.Artwork;
-
 public class Album {
 
-    private String[] titles;
+    /*private String[] titles;
     private String albumArtist;
     private String album;
-    private String genre;
-    private Artwork artwork;
+    private String genre;*/
+    private Song[] album;
 
-    Album(String[] titles, String albumArtist, String album, String genre, Artwork artwork){
-        this.titles = titles;
+    Album(Song[] album){
+        /*this.titles = titles;
         this.albumArtist = albumArtist;
         this.album = album;
-        this.genre = genre;
-        this.artwork = artwork;
+        this.genre = genre;*/
+        this.album = album;
+    }
+
+    /*public String[] getTitles(){
+        return titles;
+    }
+    public String getAlbumArtist(){
+        return albumArtist;
+    }
+    public String getAlbum(){
+        return album;
+    }
+    public String getGenre(){
+        return genre;
+    }*/
+
+    public Song[] getAlbum(){
+        return album;
     }
 
 }

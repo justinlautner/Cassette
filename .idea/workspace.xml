@@ -7,9 +7,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/check.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/empty.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/images/uncheck.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/AddFileDirectory/AddFileDirectorys.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AddFileDirectory/AddFileDirectorys.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/AddFileDirectory/Album.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AddFileDirectory/Album.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/MainPackage/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MainPackage/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/MainPackage/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MainPackage/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/MainPackage/MainPage.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MainPackage/MainPage.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/MainPackage/styleClass.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MainPackage/styleClass.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/AddFileDirectory/AddFileDirectorys.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AddFileDirectory/AddFileDirectorys.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/AddFileDirectory/Album.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AddFileDirectory/Album.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MainPackage/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MainPackage/Controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MainPackage/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MainPackage/Main.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,7 +126,7 @@
     <property name="Repository.Attach.Sources" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/images" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -125,10 +137,13 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/images" />
+      <recent name="$PROJECT_DIR$/src/main/resources" />
       <recent name="$PROJECT_DIR$/lib" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/images" />
       <recent name="$PROJECT_DIR$/src/main" />
       <recent name="$PROJECT_DIR$/src/main/java" />
       <recent name="$PROJECT_DIR$/lib" />
@@ -297,22 +312,22 @@
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
     <state x="2823" y="1011" key="Github.CreateGistDialog/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577137588359" />
-    <state width="3727" height="282" key="GridCell.Tab.0.bottom" timestamp="1577555572266">
+    <state width="1840" height="282" key="GridCell.Tab.0.bottom" timestamp="1577665030964">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="3727" height="282" key="GridCell.Tab.0.bottom/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577555572266" />
-    <state width="3727" height="282" key="GridCell.Tab.0.center" timestamp="1577555572266">
+    <state width="1840" height="282" key="GridCell.Tab.0.bottom/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577665030964" />
+    <state width="1840" height="282" key="GridCell.Tab.0.center" timestamp="1577665030964">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="3727" height="282" key="GridCell.Tab.0.center/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577555572266" />
-    <state width="3727" height="282" key="GridCell.Tab.0.left" timestamp="1577555572265">
+    <state width="1840" height="282" key="GridCell.Tab.0.center/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577665030964" />
+    <state width="1840" height="282" key="GridCell.Tab.0.left" timestamp="1577665030964">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="3727" height="282" key="GridCell.Tab.0.left/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577555572265" />
-    <state width="3727" height="282" key="GridCell.Tab.0.right" timestamp="1577555572266">
+    <state width="1840" height="282" key="GridCell.Tab.0.left/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577665030964" />
+    <state width="1840" height="282" key="GridCell.Tab.0.right" timestamp="1577665030964">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>
-    <state width="3727" height="282" key="GridCell.Tab.0.right/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577555572266" />
+    <state width="1840" height="282" key="GridCell.Tab.0.right/1080.0.3840.2160/4920.504.1920.1080/0.322.1080.1920@1080.0.3840.2160" timestamp="1577665030964" />
     <state width="1840" height="776" key="GridCell.Tab.1.bottom" timestamp="1576717258839">
       <screen x="1080" y="0" width="3840" height="2160" />
     </state>

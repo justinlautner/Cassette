@@ -1,4 +1,4 @@
-.root, AnchorPane, BorderPane, SplitPane, .scroll-pane, TilePane
+.root, AnchorPane, BorderPane, SplitPane, .scroll-pane, TilePane, .scroll-pane > .corner
 {
     -fx-background-color: #454545;
 }
@@ -9,18 +9,18 @@
 }
 .toggle-button
 {
-    -fx-background-color: #7a330d;
+    -fx-background-color: #2c2c2c;
     -fx-text-fill: white;
     -fx-padding: 5px;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
     -fx-alignment: center;
 }
-.toggle-button:selected
+.toggle-button:selected, .scroll-bar:horizontal, .scroll-bar:vertical, .scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb, .increment-button, .decrement-button
 {
     -fx-background-color: #2c2c2c;
 }
-.split-pane-divider
+.split-pane-divider, .scroll-bar:horizontal .track, .scroll-bar:vertical .track
 {
     -fx-background-color: #7a330d;
 }
