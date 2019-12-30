@@ -8,7 +8,7 @@ Do you ever feel like the slog heap of available music players are all missing a
 ```
 - Album artwork discovery pane, for choosing music from those pretty pictures.- 
 - List of genres, to browse through based on which type of music you wish to headbang to.
-- Dark mode built, because well, we all know basement dwellers dont like bright lights.
+- Dark mode built-in, because well, we all know basement dwellers dont like bright lights.
 ```
 ##### Supported formats
 ```
