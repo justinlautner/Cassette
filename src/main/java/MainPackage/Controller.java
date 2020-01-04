@@ -1,19 +1,18 @@
 package MainPackage;
 
 import AddFileDirectory.AddFileDirectorys;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
@@ -39,6 +38,8 @@ public class Controller implements Initializable {
     private ScrollPane scrollPaneRight;
     @FXML
     private SplitPane splitPane;
+    @FXML
+    private Button playButton, previousTrackButton, nextTrackButton;
 
     public Controller(){}
 
@@ -46,6 +47,9 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         //this.progressBar.setVisible(false);
+        /*this.playButton.setGraphic(new ImageView(new Image("images/playButton.png", 50, 50, true, true)));
+        this.previousTrackButton.setGraphic(new ImageView(new Image("images/previousTrack.png", 50, 50, true, true)));
+        this.nextTrackButton.setGraphic(new ImageView(new Image("images/nextTrack.png", 50, 50, true, true)));*/
 
     }
 

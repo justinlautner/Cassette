@@ -1,5 +1,6 @@
 package AddFileDirectory;
 
+import MusicPlayer.PlaySong;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -9,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -19,7 +19,6 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
-import javax.swing.*;
 import java.io.*;
 import java.text.Collator;
 import java.util.*;
@@ -183,26 +182,33 @@ public class AddFileDirectorys extends Thread {
         for (Song song : songLinkedList) {
             if (albums.contains(song.getAlbum())) {
                 try{
-                    //ToggleButton toggleButton = new ToggleButton();
 
                     File file = new File(song.getFilepath());
                     AudioFile f = AudioFileIO.read(file);
                     Tag tag = f.getTag();
 
                     //If album does not have a cover, provide a default picture
+                    //TODO: Change togglebutton to button
                     if (!tag.hasField(FieldKey.COVER_ART)){
-                        //File photo = new File(String.valueOf(getClass().getClassLoader().getResourceAsStream("/resources/images/empty.jpeg")));
                         Image image = new Image("images/empty.jpeg", 150, 150, true, true);
                         ImageView imageView = new ImageView(image);
                         imageView.setCache(true);
                         imageView.setCacheHint(CacheHint.SPEED);
 
-                        ToggleButton toggleButton = new ToggleButton(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
+                        Button toggleButton = new Button(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
                         toggleButton.setContentDisplay(ContentDisplay.TOP);
                         toggleButton.setGraphic(imageView);
                         toggleButton.setMaxWidth(150);
                         toggleButton.setAlignment(Pos.BASELINE_LEFT);
-                        imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
+                        //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
+
+                        toggleButton.setOnMouseClicked(mouseEvent -> {
+                            if (mouseEvent.getClickCount() == 2){
+                                PlaySong play = new PlaySong(song.getFilepath());
+                                play.start();
+                            }
+                        });
+
                         tilePane.getChildren().add(toggleButton);
                     }
                     else{
@@ -212,47 +218,28 @@ public class AddFileDirectorys extends Thread {
                         imageView.setCache(true);
                         imageView.setCacheHint(CacheHint.SPEED);
 
-                        ToggleButton toggleButton = new ToggleButton(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
+                        Button toggleButton = new Button(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
                         toggleButton.setContentDisplay(ContentDisplay.TOP);
                         toggleButton.setGraphic(imageView);
                         toggleButton.setMaxWidth(150);
-                        imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
 
-                        /*Label label = new Label();
-                        label.setMaxWidth(150);
-                        label.setAlignment(Pos.CENTER);
-                        label.setGraphic(imageView);
-                        label.setText("\n" + song.getAlbumArtist() + "\n" + song.getAlbum());*/
-                        /*Label label1 = new Label();
-                        label1.setText(song.getAlbum());*/
-                        //toggleButton.setTextAlignment(TextAlignment.CENTER);
-                        //toggleButton.setWrapText(true);
-                        //toggleButton.setText(song.getAlbumArtist() + "\n" + song.getAlbum());
+                        toggleButton.setOnMouseClicked(mouseEvent -> {
+                            if (mouseEvent.getClickCount() == 2){
+                                PlaySong play = new PlaySong(song.getFilepath());
+                                play.start();
+                            }
+                            if (mouseEvent.getClickCount() == 1){
 
-                        /*tilePane.getChildren().add(toggleButton);
-                        tilePane.getChildren().add(label);*/
+                            }
+                        });
+                        //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
+
                         tilePane.getChildren().add(toggleButton);
                     }
 
                     /*progress = (double) songLinkedList.indexOf(song)/songLinkedList.size();
                     progressBar.setProgress(progress);*/
 
-                    /*Group albumCovers = new Group();
-                    albumCovers.setCache(true);
-                    albumCovers.setCacheHint(CacheHint.SPEED);*/
-
-                    //Image image = new Image(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData()));
-
-                    //Image image = new Image(Arrays.toString(contents));
-
-                    /*ImageView imageView = new ImageView(image);
-                    imageView.setCache(true);
-                    imageView.setCacheHint(CacheHint.SPEED);
-                    //toggleButton.setGraphic(imageView);
-                    *//*imageView.setFitHeight(150);
-                    imageView.setFitWidth(150);*//*
-                    //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
-                    tilePane.getChildren().add(imageView);*/
                     albums.remove(song.getAlbum());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -271,7 +258,7 @@ public class AddFileDirectorys extends Thread {
         }
 
         System.out.println("ALL DONE :)");
-        progressBar.setVisible(false);
+        //progressBar.setVisible(false);
     }
 
 
