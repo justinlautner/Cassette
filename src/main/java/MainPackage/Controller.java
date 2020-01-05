@@ -33,12 +33,6 @@ public class Controller implements Initializable {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private ScrollPane scrollPaneLeft;
-    @FXML
-    private ScrollPane scrollPaneRight;
-    @FXML
-    private SplitPane splitPane;
-    @FXML
     private Button playButton, previousTrackButton, nextTrackButton;
 
     public Controller(){}

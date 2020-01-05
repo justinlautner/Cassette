@@ -1,5 +1,6 @@
 package AddFileDirectory;
 
+import MainPackage.AlbumInfoPane;
 import MusicPlayer.PlaySong;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -32,6 +33,7 @@ public class AddFileDirectorys extends Thread {
     private ProgressBar progressBar;
     private LinkedList<Song> songLinkedList = new LinkedList<>();
     private LinkedList<Album> albumLinkedList = new LinkedList<>();
+    //private LinkedList<Genre> genreLinkedList = new LinkedList<>();
     private String compareString = "";
     private ArrayList<String> genres = new ArrayList<>();
     private ArrayList<String> albums = new ArrayList<>();
@@ -211,6 +213,7 @@ public class AddFileDirectorys extends Thread {
 
                         tilePane.getChildren().add(toggleButton);
                     }
+                    //Get album cover and create its button
                     else{
                         byte[] contents = tag.getFirstArtwork().getBinaryData();
                         Image image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true);
@@ -229,7 +232,7 @@ public class AddFileDirectorys extends Thread {
                                 play.start();
                             }
                             if (mouseEvent.getClickCount() == 1){
-
+                                AlbumInfoPane albumInfoPane = new AlbumInfoPane();
                             }
                         });
                         //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
