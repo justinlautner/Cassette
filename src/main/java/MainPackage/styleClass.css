@@ -1,4 +1,4 @@
-.root, AnchorPane, BorderPane, SplitPane, .scroll-pane, TilePane, .scroll-pane > .corner
+.root, AnchorPane, BorderPane, SplitPane, .scroll-pane, TilePane, .scroll-pane > .corner, FlowPane
 {
     -fx-background-color: #454545;
 }
@@ -34,4 +34,10 @@
     -fx-border-color: #7a330d;
     -fx-background-color: #7a330d;
     -fx-border-width: 1 0 0 0;
+}
+.table-view {
+    -fx-table-cell-border-color: transparent;
+}
+.column-header-background {
+    visibility: hidden; -fx-padding: -1em;
 }

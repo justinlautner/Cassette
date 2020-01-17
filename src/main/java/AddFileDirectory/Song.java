@@ -3,7 +3,7 @@ package AddFileDirectory;
 public class Song {
 
     private String filepath;
-    private String track;
+    private int track;
     private String title;
     private String artist;
     private String albumArtist;
@@ -12,8 +12,9 @@ public class Song {
     private String year;
     private String lyrics;
     private String discNum;
+    private int numberOfSongs = 0;
 
-    Song(String filepath, String track, String title, String artist, String albumArtist, String album, String year, String lyrics, String genre, String discNum){
+    Song(String filepath, int track, String title, String artist, String albumArtist, String album, String year, String lyrics, String genre, String discNum){
         this.filepath = filepath;
         this.track = track;
         this.title = title;
@@ -24,13 +25,14 @@ public class Song {
         this.discNum = discNum;
         this.year = year;
         this.lyrics = lyrics;
+        this.numberOfSongs++;
     }
 
     public String getFilepath(){
         return filepath;
     }
 
-    public String getTrack(){
+    public int getTrack(){
         return track;
     }
 
@@ -66,5 +68,7 @@ public class Song {
         return discNum;
     }
 
-
+    public int getNumberOfSongs(){
+        return numberOfSongs;
+    }
 }

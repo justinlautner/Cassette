@@ -40,7 +40,7 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Tools">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" text="Your Library..." />
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -104,9 +104,9 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@styleClass.css" SplitPane.resizableWithParent="false">
                <children>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@styleClass.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@styleClass.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <content>
-                        <TilePane fx:id="tilePane" hgap="10.0" prefHeight="369.0" prefWidth="474.0" stylesheets="@styleClass.css" vgap="5.0" />
+                        <FlowPane fx:id="tilePane" prefHeight="200.0" rowValignment="TOP" />
                      </content>
                   </ScrollPane>
                </children></AnchorPane>

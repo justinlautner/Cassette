@@ -1,19 +1,23 @@
 package AddFileDirectory;
 
+import java.util.ArrayList;
+
 public class Album {
 
     /*private String[] titles;
     private String albumArtist;
     private String album;
     private String genre;*/
-    private Song[] album;
+    private ArrayList<Song> album;
+    private int numberOfAlbums = 0;
 
-    Album(Song[] album){
+    Album(ArrayList<Song> album){
         /*this.titles = titles;
         this.albumArtist = albumArtist;
         this.album = album;
         this.genre = genre;*/
-        this.album = album;
+        this.album = new ArrayList<>(album);
+        this.numberOfAlbums++;
     }
 
     /*public String[] getTitles(){
@@ -29,8 +33,15 @@ public class Album {
         return genre;
     }*/
 
-    public Song[] getAlbum(){
+    public ArrayList<Song> getAlbum(){
         return album;
     }
 
+    public Song getSong(int i){
+        return album.get(i);
+    }
+
+    public int getNumberOfAlbums() {
+        return numberOfAlbums;
+    }
 }

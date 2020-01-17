@@ -13,7 +13,7 @@ Do you ever feel like the slog heap of available music players are all missing a
 ```
 ##### Supported formats
 ```
-- Plays: AAC, Mp3, Mp4, Wav, Flac
+- Plays: AAC, Mp3, Mp4, Wav, Flac (16 bit)
 - Tags: Mp3, Mp4 (Mp4 audio, M4a and M4p audio) Ogg Vorbis, Flac, Wav, Aif, Dsf and Wma
 - Looking to expand these in future releases.
 ```

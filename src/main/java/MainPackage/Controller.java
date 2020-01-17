@@ -10,6 +10,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -29,7 +30,9 @@ public class Controller implements Initializable {
     @FXML
     private VBox vBox;
     @FXML
-    private TilePane tilePane;
+    private FlowPane tilePane;
+    @FXML
+    private ScrollPane scrollPane;
     @FXML
     private ProgressBar progressBar;
     @FXML
@@ -59,7 +62,7 @@ public class Controller implements Initializable {
 
         //If user chose a folder, commence search for music
         if (chosenFolder != null){
-            AddFileDirectorys addFileDirectorys = new AddFileDirectorys(chosenFolder, vBox, tilePane, progressBar);
+            AddFileDirectorys addFileDirectorys = new AddFileDirectorys(chosenFolder, vBox, tilePane, progressBar, scrollPane);
             addFileDirectorys.start();
         }
 

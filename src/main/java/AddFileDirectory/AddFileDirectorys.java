@@ -1,21 +1,23 @@
 package AddFileDirectory;
 
-import MainPackage.AlbumInfoPane;
 import MusicPlayer.PlaySong;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.audio.mp3.VbriFrame;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
@@ -29,21 +31,27 @@ public class AddFileDirectorys extends Thread {
     //TODO: figure out save format for library for reuse
     private File chosenDirectory;
     private VBox vBox;
-    private TilePane tilePane;
+    private FlowPane tilePane;
+    private ScrollPane scrollPane;
     private ProgressBar progressBar;
     private LinkedList<Song> songLinkedList = new LinkedList<>();
     private LinkedList<Album> albumLinkedList = new LinkedList<>();
     //private LinkedList<Genre> genreLinkedList = new LinkedList<>();
-    private String compareString = "";
     private ArrayList<String> genres = new ArrayList<>();
     private ArrayList<String> albums = new ArrayList<>();
+    private ArrayList<Song> singleAlbum = new ArrayList<>();
+    private HashMap<Button, Integer> buttonLocation = new HashMap<>();
+    private int locationNumber = 1, lastButtonChosen = 0;
+    private Pane pane;
+    private boolean albumIsOpen;
 
-    public AddFileDirectorys(File file, VBox vBox, TilePane tilePane, ProgressBar progressBar){
+    public AddFileDirectorys(File file, VBox vBox, FlowPane tilePane, ProgressBar progressBar, ScrollPane scrollPane){
 
         this.chosenDirectory = file;
         this.vBox = vBox;
         this.tilePane = tilePane;
         this.progressBar = progressBar;
+        this.scrollPane = scrollPane;
 
     }
 
@@ -107,12 +115,8 @@ public class AddFileDirectorys extends Thread {
             String year = tag.getFirst(FieldKey.YEAR);
             String lyrics = tag.getFirst(FieldKey.LYRICS);
 
-            if (!compareString.equals(album)){
-
-            }
-
             //Create song object with relevant tags embedded
-            Song song = new Song(filePath, track, title, artist, albumArtist, album, year, lyrics, genre, discNum);
+            Song song = new Song(filePath, Integer.parseInt(track), title, artist, albumArtist, album, year, lyrics, genre, discNum);
             songLinkedList.add(song);
 
             //Divide songs and genres into their own groups
@@ -138,32 +142,48 @@ public class AddFileDirectorys extends Thread {
 
     private void setMusicScene(){
 
-        //Create arrays for genres and albums, in order to prevent printing duplicate album covers
-        /*ArrayList<String> genres = new ArrayList<>();
-        ArrayList<String> albums = new ArrayList<>();*/
-
-        //Sort songs by album artist, as is my preferance
+        //Sort songs by album artist, as is my preference
         //TODO: Edit this sort to allow user to change comparators, e.g. album or year
-        //songLinkedList.sort((song, t1) -> Collator.getInstance().compare(song.getAlbumArtist(), t1.getAlbumArtist()));
-
         songLinkedList.sort((song, t1) -> Collator.getInstance().compare(song.getAlbumArtist(), t1.getAlbumArtist()));
-        //Iterate through songs and instantiate arrays
-        /*for (Song song : songLinkedList) {
-            if (!genres.contains(song.getGenre())) {
-                genres.add(song.getGenre());
-            }
-            if (!albums.contains(song.getAlbum())) {
-                albums.add(song.getAlbum());
+
+        for (int i = 0; i < songLinkedList.size(); i++){
+            String curr = songLinkedList.get(i).getAlbum();
+            //System.out.println(songLinkedList.get(i).getTitle());
+            //System.out.println("current: " + curr);
+            if (i != 0){
+                String prev = songLinkedList.get(i - 1).getAlbum();
+                //System.out.println("previous: " + prev);
+                if (!(curr.equals(prev))) {
+                    /*for (Song song: singleAlbum){
+                        System.out.println(song.getAlbum());
+                    }*/
+                    System.out.println(singleAlbum);
+                    //Album album = new Album(singleAlbum);
+                    singleAlbum.sort(new Comparator<Song>() {
+                        @Override
+                        public int compare(Song song, Song t1) {
+                            return Integer.compare(song.getTrack(), t1.getTrack());
+                        }
+                    });
+                    albumLinkedList.add(new Album(singleAlbum));
+                    singleAlbum.clear();
+                    for (Album temp : albumLinkedList) {
+                        System.out.println(temp.getAlbum());
+                    }
+                    System.out.println("is this thing on?");
+                }
             }
 
-        }*/
+            singleAlbum.add(songLinkedList.get(i));
+        }
+        albumLinkedList.add(new Album(singleAlbum));
 
         //sort genres for alphabetical ordering
         Collections.sort(genres);
         //Create ToggleButtons for each genre
-        //TODO: Allow genre ToggleButtons to be opened and used to find new music to add to playlist
+        Accordion accordion = new Accordion();
         for (String s: genres){
-            ToggleButton toggleButton = new ToggleButton();
+            /*ToggleButton toggleButton = new ToggleButton();
             Image check = new Image("images/check.png", 10, 10, true, true);
             Image unCheck = new Image("images/uncheck.png", 10, 10, true, true);
             ImageView imageView = new ImageView();
@@ -172,96 +192,466 @@ public class AddFileDirectorys extends Thread {
             toggleButton.setText(s);
             toggleButton.getStyleClass().add("styleClass.css");
             toggleButton.setAlignment(Pos.CENTER);
-            vBox.getChildren().add(toggleButton);
+            vBox.getChildren().add(toggleButton);*/
+
+            TitledPane titledPane = new TitledPane();
+            Image check = new Image("images/check.png", 10, 10, true, true);
+            Image unCheck = new Image("images/uncheck.png", 10, 10, true, true);
+            ImageView imageView = new ImageView();
+            imageView.imageProperty().bind(Bindings.when(titledPane.expandedProperty()).then(check).otherwise(unCheck));
+            titledPane.setGraphic(imageView);
+            titledPane.setText(s);
+            titledPane.getStyleClass().add("styleClass.css");
+            titledPane.setAlignment(Pos.CENTER);
+            accordion.getPanes().add(titledPane);
         }
+        vBox.getChildren().add(accordion);
 
-        //Add toggle buttons for album artworks, to allow user to search and play music by them
-        //TODO: Allow ToggleButtons to drop song list for that album, to choose from
-        System.out.println(albums);
-        /*double progress = 0;
-        progressBar.setVisible(true);
-        progressBar.setProgress(progress);*/
-        for (Song song : songLinkedList) {
-            if (albums.contains(song.getAlbum())) {
-                try{
+        //Add album buttons from which to search through and choose songs to play
+        for (Album album : albumLinkedList) {
+            try{
 
-                    File file = new File(song.getFilepath());
-                    AudioFile f = AudioFileIO.read(file);
-                    Tag tag = f.getTag();
+                //Get file information from which to return tags
+                //Assuming that all songs in an album have the artwork on file, only the first is needed to get it
+                //If all songs do not have the cover, it can be added to the whole album later on
+                Song song = album.getSong(0);
+                File file = new File(song.getFilepath());
+                AudioFile f = AudioFileIO.read(file);
+                Tag tag = f.getTag();
 
-                    //If album does not have a cover, provide a default picture
-                    //TODO: Change togglebutton to button
-                    if (!tag.hasField(FieldKey.COVER_ART)){
-                        Image image = new Image("images/empty.jpeg", 150, 150, true, true);
-                        ImageView imageView = new ImageView(image);
-                        imageView.setCache(true);
-                        imageView.setCacheHint(CacheHint.SPEED);
-
-                        Button toggleButton = new Button(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
-                        toggleButton.setContentDisplay(ContentDisplay.TOP);
-                        toggleButton.setGraphic(imageView);
-                        toggleButton.setMaxWidth(150);
-                        toggleButton.setAlignment(Pos.BASELINE_LEFT);
-                        //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
-
-                        toggleButton.setOnMouseClicked(mouseEvent -> {
-                            if (mouseEvent.getClickCount() == 2){
-                                PlaySong play = new PlaySong(song.getFilepath());
-                                play.start();
-                            }
-                        });
-
-                        tilePane.getChildren().add(toggleButton);
-                    }
-                    //Get album cover and create its button
-                    else{
-                        byte[] contents = tag.getFirstArtwork().getBinaryData();
-                        Image image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true);
-                        ImageView imageView = new ImageView(image);
-                        imageView.setCache(true);
-                        imageView.setCacheHint(CacheHint.SPEED);
-
-                        Button toggleButton = new Button(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
-                        toggleButton.setContentDisplay(ContentDisplay.TOP);
-                        toggleButton.setGraphic(imageView);
-                        toggleButton.setMaxWidth(150);
-
-                        toggleButton.setOnMouseClicked(mouseEvent -> {
-                            if (mouseEvent.getClickCount() == 2){
-                                PlaySong play = new PlaySong(song.getFilepath());
-                                play.start();
-                            }
-                            if (mouseEvent.getClickCount() == 1){
-                                AlbumInfoPane albumInfoPane = new AlbumInfoPane();
-                            }
-                        });
-                        //imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(image).otherwise(image));
-
-                        tilePane.getChildren().add(toggleButton);
-                    }
-
-                    /*progress = (double) songLinkedList.indexOf(song)/songLinkedList.size();
-                    progressBar.setProgress(progress);*/
-
-                    albums.remove(song.getAlbum());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (CannotReadException e) {
-                    e.printStackTrace();
-                } catch (ReadOnlyFileException e) {
-                    e.printStackTrace();
-                } catch (TagException e) {
-                    e.printStackTrace();
-                } catch (InvalidAudioFrameException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e){
-                    e.printStackTrace();
+                //If the album has a cover art, use it, otherwise provide a static image
+                Image image;
+                if (!tag.hasField(FieldKey.COVER_ART)){
+                    image = new Image("images/empty.jpeg", 150, 150, true, true);
                 }
+                else{
+                    byte[] contents = tag.getFirstArtwork().getBinaryData();
+                    image = new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true);
+                }
+                ImageView imageView = new ImageView(image);
+                imageView.setCache(true);
+                imageView.setCacheHint(CacheHint.SPEED);
+
+                //Create the button by which to place the image
+                Button toggleButton = new Button(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
+                toggleButton.setContentDisplay(ContentDisplay.TOP);
+                toggleButton.setGraphic(imageView);
+                toggleButton.setMaxWidth(150);
+                tilePane.getChildren().add(toggleButton);
+                //This map allows for returning the position of each album, useful for placing dropdown and closing them
+                buttonLocation.put(toggleButton, locationNumber++);
+
+                //Create listener for button to ensure desired actions upon number of mouse clicks
+                //One mouse clicks makes a drop down of songs in that album, and two place the album in its entirety
+                //TODO: Change listener does not work with maximizing the window, fix this
+                //TODO: Remove hardcoded button width
+                toggleButton.setOnMouseClicked(mouseEvent -> {
+                    if (mouseEvent.getClickCount() == 2){
+                        PlaySong play = new PlaySong(song.getFilepath());
+                        play.start();
+                    }
+                    if (mouseEvent.getClickCount() == 1){
+                        if (lastButtonChosen == buttonLocation.get(toggleButton) && albumIsOpen){
+                            tilePane.getChildren().remove(pane);
+                            albumIsOpen = false;
+                        }
+                        else{
+                            albumIsOpen = true;
+                            tilePane.getChildren().remove(pane);
+                            try {
+                                lastButtonChosen = buttonLocation.get(toggleButton);
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AlbumInfoPane.fxml"));
+                                pane = loader.load();
+                                AlbumInfoPane controller = loader.getController();
+
+                                if (!tag.hasField(FieldKey.COVER_ART)){
+                                    controller.setAlbumImage(new Image("images/empty.jpeg", 150, 150, true, true));
+                                }
+                                else{
+                                    controller.setAlbumImage(new Image(new BufferedInputStream(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData())), 300, 300, true, true));
+                                }
+
+                                controller.setTilePane(album.getAlbum());
+                                pane.setPrefWidth(tilePane.getWidth());
+                                scrollPane.widthProperty().addListener(new ChangeListener<Number>() {
+                                    @Override
+                                    public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                                        pane.setPrefWidth((Double) number);
+                                        if (albumIsOpen){
+                                            tilePane.getChildren().remove(pane);
+                                            int panePlacement = getPanePlacement(buttonLocation.get(toggleButton), 168);
+                                            //This prevents attempts at adding the pane at a higher number than the tilePane has
+                                            if (panePlacement > tilePane.getChildren().size()){
+                                                tilePane.getChildren().add(tilePane.getChildren().size(), pane);
+                                            }
+                                            else{
+                                                tilePane.getChildren().add(panePlacement, pane);
+                                            }
+                                        }
+                                    }
+                                });
+
+                                System.out.println("WIDTH: " + tilePane.getWidth());
+                                System.out.println(toggleButton.getLayoutX());
+                                System.out.println("HEIGHT: " + tilePane.getHeight());
+                                System.out.println(getPanePlacement(buttonLocation.get(toggleButton), 168));
+                                int panePlacement = getPanePlacement(buttonLocation.get(toggleButton), 168);
+                                //This prevents attempts at adding the pane at a higher number than the tilePane has
+                                if (panePlacement > tilePane.getChildren().size()){
+                                    tilePane.getChildren().add(tilePane.getChildren().size(), pane);
+                                }
+                                else{
+                                    tilePane.getChildren().add(panePlacement, pane);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (CannotReadException e) {
+                e.printStackTrace();
+            } catch (ReadOnlyFileException e) {
+                e.printStackTrace();
+            } catch (TagException e) {
+                e.printStackTrace();
+            } catch (InvalidAudioFrameException e) {
+                e.printStackTrace();
+            } catch (NullPointerException e){
+                e.printStackTrace();
             }
         }
 
         System.out.println("ALL DONE :)");
         //progressBar.setVisible(false);
+    }
+
+    private int getPanePlacement(int location, double buttonWidth){
+        /*
+        * This method determines where to place the dropdown album pane in the graph so that it is under the chosen object
+        * By judging the width of the pane, you can tell how many album covers will fit inside the window
+        * Using the location number (which shows which album was chosen, you can estimate which row is needed to place the dropdown under
+        * e.g. if there are 6 albums in a row, and you choose the 20th album, you place the dropdown after that row which would be 4th row (6*4=24)
+        */
+        double width = tilePane.getWidth();
+        int placement = 0;
+
+        System.out.println("location: " + location);
+        System.out.println("button width: " + buttonWidth);
+
+        if (width < (buttonWidth * 6)){
+            placement = 5;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 7)){
+            placement = 6;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 8)){
+            placement = 7;
+            if (location <= 5){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 9)){
+            placement = 8;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 10)){
+            placement = 9;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 11)){
+            placement = 10;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 12)){
+            placement = 11;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 13)){
+            placement = 12;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 14)){
+            placement = 13;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 15)){
+            placement = 14;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 16)){
+            placement = 15;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 17)){
+            placement = 16;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 18)){
+            placement = 17;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 19)){
+            placement = 18;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 20)){
+            placement = 19;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 21)){
+            placement = 20;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        if (width < (buttonWidth * 22)){
+            placement = 21;
+            if (location <= placement){
+                return placement;
+            }
+            if (location <= (placement*2)){
+                return placement * 2;
+            }
+            if (location <= (placement*3)){
+                return placement * 3;
+            }
+            if (location <= (placement*4)){
+                return placement * 4;
+            }
+            if (location <= (placement*5)){
+                return placement * 5;
+            }
+        }
+        System.out.println("HELLO I AM HERE BUT WHY");
+        return 5;
     }
 
 
