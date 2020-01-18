@@ -1,32 +1,47 @@
 package AddFileDirectory;
 
+import MusicPlayer.PlaySong;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class AlbumInfoPane implements Initializable {
 
     @FXML
     private ImageView albumImage;
+    @FXML
+    private GridPane gridPane;
+    @FXML
+    private AnchorPane anchorPane;
     @FXML
     private TableView<SongDisplay> tableViewLeft;
     @FXML
@@ -45,6 +60,7 @@ public class AlbumInfoPane implements Initializable {
     private TableColumn<SongDisplay, String> lengthRight;
     private ObservableList<SongDisplay> listLeft = FXCollections.observableArrayList();
     private ObservableList<SongDisplay> listRight = FXCollections.observableArrayList();
+    private HashMap<SongDisplay, String> songFilePaths = new HashMap<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,8 +78,8 @@ public class AlbumInfoPane implements Initializable {
 
         tableViewRight.setItems(listRight);
 
-        tableViewLeft.setStyle("-fx-selection-bar: #7a330d; -fx-selection-bar-non-focused: #454545;");
-        tableViewRight.setStyle("-fx-selection-bar: #7a330d; -fx-selection-bar-non-focused: #454545;");
+        /*tableViewLeft.setStyle("-fx-selection-bar: #7a330d; -fx-selection-bar-non-focused: #454545;");
+        tableViewRight.setStyle("-fx-selection-bar: #7a330d; -fx-selection-bar-non-focused: #454545;");*/
     }
 
     public AlbumInfoPane(){
@@ -72,6 +88,24 @@ public class AlbumInfoPane implements Initializable {
 
     public void setAlbumImage(Image image) {
         albumImage.setImage(image);
+    }
+
+    public void setStyle(String colorHex){
+
+        gridPane.setStyle("-fx-background-color: " + colorHex);
+        anchorPane.setStyle("-fx-background-color: " + colorHex);
+
+        trackLeft.setStyle("-fx-background-color: " + colorHex);
+        titleLeft.setStyle("-fx-background-color: " + colorHex);
+        lengthLeft.setStyle("-fx-background-color: " + colorHex);
+        trackRight.setStyle("-fx-background-color: " + colorHex);
+        titleRight.setStyle("-fx-background-color: " + colorHex);
+        lengthRight.setStyle("-fx-background-color: " + colorHex);
+
+        //-fx-selection-bar: #454545; for later?
+        tableViewLeft.setStyle("-fx-selection-bar-non-focused: transparent; -fx-box-border: " + colorHex + ";");
+        tableViewRight.setStyle("-fx-selection-bar-non-focused: transparent; -fx-box-border: " + colorHex + ";");
+
     }
 
     public void setTilePane(ArrayList<Song> songs){
@@ -103,15 +137,30 @@ public class AlbumInfoPane implements Initializable {
                 if (temp.length() < 3){
                     realTrackLength = realTrackLength.substring(0, realTrackLength.length() - 1) + "0" + realTrackLength.substring(realTrackLength.length() - 1);
                 }
-
+                if (songs.size() <= 5){
+                    tableViewRight.setVisible(false);
+                }
                 //Distribute songs between two tables, in order to prevent one huge list
+                SongDisplay songDisplay = new SongDisplay(song.getTrack(), song.getTitle(), realTrackLength);
                 if (songs.indexOf(song) <= (songs.size()/2)){
-                    listLeft.add(new SongDisplay(song.getTrack(), song.getTitle(), realTrackLength));
+                    listLeft.add(songDisplay);
                 }
                 else{
-                    listRight.add(new SongDisplay(song.getTrack(), song.getTitle(), realTrackLength));
+                    listRight.add(songDisplay);
                 }
+                songFilePaths.put(songDisplay, song.getFilepath());
             }
+            tableViewLeft.setRowFactory( tv -> {
+                TableRow<SongDisplay> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                        PlaySong playSong = new PlaySong(songFilePaths.get(row.getItem()));
+                        playSong.kill();
+                        playSong.start();
+                    }
+                });
+                return row ;
+            });
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CannotReadException e) {

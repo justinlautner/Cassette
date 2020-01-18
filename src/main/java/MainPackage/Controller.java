@@ -51,7 +51,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void addFiles() throws IOException, ReadOnlyFileException, TagException, InvalidAudioFrameException, CannotReadException {
+    private void addFiles(){
 
         //Open directory chooser to add files
         DirectoryChooser chooser = new DirectoryChooser();

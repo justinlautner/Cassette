@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -22,6 +23,8 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.Collator;
 import java.util.*;
@@ -180,6 +183,7 @@ public class AddFileDirectorys extends Thread {
 
         //sort genres for alphabetical ordering
         Collections.sort(genres);
+
         //Create ToggleButtons for each genre
         Accordion accordion = new Accordion();
         for (String s: genres){
@@ -245,6 +249,7 @@ public class AddFileDirectorys extends Thread {
                 //One mouse clicks makes a drop down of songs in that album, and two place the album in its entirety
                 //TODO: Change listener does not work with maximizing the window, fix this
                 //TODO: Remove hardcoded button width
+                //TODO: Tables are uneven by a factor of one when even number of songs
                 toggleButton.setOnMouseClicked(mouseEvent -> {
                     if (mouseEvent.getClickCount() == 2){
                         PlaySong play = new PlaySong(song.getFilepath());
@@ -264,12 +269,17 @@ public class AddFileDirectorys extends Thread {
                                 pane = loader.load();
                                 AlbumInfoPane controller = loader.getController();
 
+                                Image tempImage;
                                 if (!tag.hasField(FieldKey.COVER_ART)){
                                     controller.setAlbumImage(new Image("images/empty.jpeg", 150, 150, true, true));
+                                    tempImage = new Image("images/empty.jpeg", 1, 1, true, true);
                                 }
                                 else{
                                     controller.setAlbumImage(new Image(new BufferedInputStream(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData())), 300, 300, true, true));
+                                    tempImage = new Image(new BufferedInputStream(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData())), 1, 1, true, true);
                                 }
+                                pane.setStyle("-fx-background-color: " + convertRGBToHex(tempImage));
+                                controller.setStyle(convertRGBToHex(tempImage));
 
                                 controller.setTilePane(album.getAlbum());
                                 pane.setPrefWidth(tilePane.getWidth());
@@ -291,10 +301,6 @@ public class AddFileDirectorys extends Thread {
                                     }
                                 });
 
-                                System.out.println("WIDTH: " + tilePane.getWidth());
-                                System.out.println(toggleButton.getLayoutX());
-                                System.out.println("HEIGHT: " + tilePane.getHeight());
-                                System.out.println(getPanePlacement(buttonLocation.get(toggleButton), 168));
                                 int panePlacement = getPanePlacement(buttonLocation.get(toggleButton), 168);
                                 //This prevents attempts at adding the pane at a higher number than the tilePane has
                                 if (panePlacement > tilePane.getChildren().size()){
@@ -329,6 +335,13 @@ public class AddFileDirectorys extends Thread {
 
         System.out.println("ALL DONE :)");
         //progressBar.setVisible(false);
+    }
+
+    private String convertRGBToHex(Image image){
+
+        Color color = image.getPixelReader().getColor(0,0);
+
+        return String.format("#%02x%02x%02x", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
     }
 
     private int getPanePlacement(int location, double buttonWidth){
