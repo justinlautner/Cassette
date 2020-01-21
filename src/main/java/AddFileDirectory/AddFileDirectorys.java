@@ -18,13 +18,10 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.audio.mp3.VbriFrame;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.Collator;
 import java.util.*;
@@ -34,7 +31,7 @@ public class AddFileDirectorys extends Thread {
     //TODO: figure out save format for library for reuse
     private File chosenDirectory;
     private VBox vBox;
-    private FlowPane tilePane;
+    private FlowPane flowPane;
     private ScrollPane scrollPane;
     private ProgressBar progressBar;
     private LinkedList<Song> songLinkedList = new LinkedList<>();
@@ -47,12 +44,13 @@ public class AddFileDirectorys extends Thread {
     private int locationNumber = 1, lastButtonChosen = 0;
     private Pane pane;
     private boolean albumIsOpen;
+    private PlaySong playSong = new PlaySong();
 
-    public AddFileDirectorys(File file, VBox vBox, FlowPane tilePane, ProgressBar progressBar, ScrollPane scrollPane){
+    public AddFileDirectorys(File file, VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane){
 
         this.chosenDirectory = file;
         this.vBox = vBox;
-        this.tilePane = tilePane;
+        this.flowPane = flowPane;
         this.progressBar = progressBar;
         this.scrollPane = scrollPane;
 
@@ -119,7 +117,14 @@ public class AddFileDirectorys extends Thread {
             String lyrics = tag.getFirst(FieldKey.LYRICS);
 
             //Create song object with relevant tags embedded
-            Song song = new Song(filePath, Integer.parseInt(track), title, artist, albumArtist, album, year, lyrics, genre, discNum);
+            //TODO: replace track Integer with String to prevent empty string issue
+            Song song;
+            if (track.equals("")){
+                song = new Song(filePath, -1, title, artist, albumArtist, album, year, lyrics, genre, discNum);
+            }
+            else{
+                song = new Song(filePath, Integer.parseInt(track), title, artist, albumArtist, album, year, lyrics, genre, discNum);
+            }
             songLinkedList.add(song);
 
             //Divide songs and genres into their own groups
@@ -178,13 +183,13 @@ public class AddFileDirectorys extends Thread {
             }
 
             singleAlbum.add(songLinkedList.get(i));
-        }
+        }//end for loop
         albumLinkedList.add(new Album(singleAlbum));
 
         //sort genres for alphabetical ordering
         Collections.sort(genres);
 
-        //Create ToggleButtons for each genre
+        //Create buttons for each genre
         Accordion accordion = new Accordion();
         for (String s: genres){
             /*ToggleButton toggleButton = new ToggleButton();
@@ -194,7 +199,7 @@ public class AddFileDirectorys extends Thread {
             imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(check).otherwise(unCheck));
             toggleButton.setGraphic(imageView);
             toggleButton.setText(s);
-            toggleButton.getStyleClass().add("styleClass.css");
+            toggleButton.getStyleClass().add("generalStyle.css");
             toggleButton.setAlignment(Pos.CENTER);
             vBox.getChildren().add(toggleButton);*/
 
@@ -205,7 +210,7 @@ public class AddFileDirectorys extends Thread {
             imageView.imageProperty().bind(Bindings.when(titledPane.expandedProperty()).then(check).otherwise(unCheck));
             titledPane.setGraphic(imageView);
             titledPane.setText(s);
-            titledPane.getStyleClass().add("styleClass.css");
+            titledPane.getStyleClass().add("generalStyle.css");
             titledPane.setAlignment(Pos.CENTER);
             accordion.getPanes().add(titledPane);
         }
@@ -237,34 +242,37 @@ public class AddFileDirectorys extends Thread {
                 imageView.setCacheHint(CacheHint.SPEED);
 
                 //Create the button by which to place the image
-                Button toggleButton = new Button(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
-                toggleButton.setContentDisplay(ContentDisplay.TOP);
-                toggleButton.setGraphic(imageView);
-                toggleButton.setMaxWidth(150);
-                tilePane.getChildren().add(toggleButton);
+                Button button = new Button(song.getAlbumArtist() + "\n" + song.getAlbum(), imageView);
+                button.setContentDisplay(ContentDisplay.TOP);
+                button.setGraphic(imageView);
+                button.setMaxWidth(150);
+                flowPane.getChildren().add(button);
                 //This map allows for returning the position of each album, useful for placing dropdown and closing them
-                buttonLocation.put(toggleButton, locationNumber++);
+                buttonLocation.put(button, locationNumber++);
 
                 //Create listener for button to ensure desired actions upon number of mouse clicks
                 //One mouse clicks makes a drop down of songs in that album, and two place the album in its entirety
                 //TODO: Change listener does not work with maximizing the window, fix this
                 //TODO: Remove hardcoded button width
                 //TODO: Tables are uneven by a factor of one when even number of songs
-                toggleButton.setOnMouseClicked(mouseEvent -> {
+                //TODO: Diversify classes better, less code on each class
+                button.setOnMouseClicked(mouseEvent -> {
                     if (mouseEvent.getClickCount() == 2){
-                        PlaySong play = new PlaySong(song.getFilepath());
-                        play.start();
+                        //playSong = new PlaySong(song.getFilepath());
+                        //playSong.start();
+                        playSong.setSong(song.getFilepath());
+                        playSong.start();
                     }
                     if (mouseEvent.getClickCount() == 1){
-                        if (lastButtonChosen == buttonLocation.get(toggleButton) && albumIsOpen){
-                            tilePane.getChildren().remove(pane);
+                        if (lastButtonChosen == buttonLocation.get(button) && albumIsOpen){
+                            flowPane.getChildren().remove(pane);
                             albumIsOpen = false;
                         }
                         else{
                             albumIsOpen = true;
-                            tilePane.getChildren().remove(pane);
+                            flowPane.getChildren().remove(pane);
                             try {
-                                lastButtonChosen = buttonLocation.get(toggleButton);
+                                lastButtonChosen = buttonLocation.get(button);
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AlbumInfoPane.fxml"));
                                 pane = loader.load();
                                 AlbumInfoPane controller = loader.getController();
@@ -281,33 +289,33 @@ public class AddFileDirectorys extends Thread {
                                 pane.setStyle("-fx-background-color: " + convertRGBToHex(tempImage));
                                 controller.setStyle(convertRGBToHex(tempImage));
 
-                                controller.setTilePane(album.getAlbum());
-                                pane.setPrefWidth(tilePane.getWidth());
+                                controller.setFlowPane(album.getAlbum());
+                                pane.setPrefWidth(flowPane.getWidth());
                                 scrollPane.widthProperty().addListener(new ChangeListener<Number>() {
                                     @Override
                                     public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
                                         pane.setPrefWidth((Double) number);
                                         if (albumIsOpen){
-                                            tilePane.getChildren().remove(pane);
-                                            int panePlacement = getPanePlacement(buttonLocation.get(toggleButton), 168);
-                                            //This prevents attempts at adding the pane at a higher number than the tilePane has
-                                            if (panePlacement > tilePane.getChildren().size()){
-                                                tilePane.getChildren().add(tilePane.getChildren().size(), pane);
+                                            flowPane.getChildren().remove(pane);
+                                            int panePlacement = getPanePlacement(buttonLocation.get(button), 168);
+                                            //This prevents attempts at adding the pane at a higher number than the flowPane has
+                                            if (panePlacement > flowPane.getChildren().size()){
+                                                flowPane.getChildren().add(flowPane.getChildren().size(), pane);
                                             }
                                             else{
-                                                tilePane.getChildren().add(panePlacement, pane);
+                                                flowPane.getChildren().add(panePlacement, pane);
                                             }
                                         }
                                     }
-                                });
+                                });//end ChangeListener
 
-                                int panePlacement = getPanePlacement(buttonLocation.get(toggleButton), 168);
-                                //This prevents attempts at adding the pane at a higher number than the tilePane has
-                                if (panePlacement > tilePane.getChildren().size()){
-                                    tilePane.getChildren().add(tilePane.getChildren().size(), pane);
+                                int panePlacement = getPanePlacement(buttonLocation.get(button), 168);
+                                //This prevents attempts at adding the pane at a higher number than the flowPane has
+                                if (panePlacement > flowPane.getChildren().size()){
+                                    flowPane.getChildren().add(flowPane.getChildren().size(), pane);
                                 }
                                 else{
-                                    tilePane.getChildren().add(panePlacement, pane);
+                                    flowPane.getChildren().add(panePlacement, pane);
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -316,7 +324,7 @@ public class AddFileDirectorys extends Thread {
                         }
                     }
 
-                });
+                });//end setOnMouseClicked() listener
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -331,11 +339,11 @@ public class AddFileDirectorys extends Thread {
             } catch (NullPointerException e){
                 e.printStackTrace();
             }
-        }
+        }//end album for loop
 
         System.out.println("ALL DONE :)");
         //progressBar.setVisible(false);
-    }
+    }//end setMusicScene() method
 
     private String convertRGBToHex(Image image){
 
@@ -351,321 +359,26 @@ public class AddFileDirectorys extends Thread {
         * Using the location number (which shows which album was chosen, you can estimate which row is needed to place the dropdown under
         * e.g. if there are 6 albums in a row, and you choose the 20th album, you place the dropdown after that row which would be 4th row (6*4=24)
         */
-        double width = tilePane.getWidth();
-        int placement = 0;
+        double width = flowPane.getWidth();
+        int placement = 6;
 
         System.out.println("location: " + location);
         System.out.println("button width: " + buttonWidth);
 
-        if (width < (buttonWidth * 6)){
-            placement = 5;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
+        while (width > (buttonWidth * placement)){
+            placement++;
         }
-        if (width < (buttonWidth * 7)){
-            placement = 6;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
+        placement -= 1;
+        System.out.println("PLACEMENT IS: " + placement);
+
+        int multiplyer = 1;
+        while (location > placement * multiplyer){
+            multiplyer++;
         }
-        if (width < (buttonWidth * 8)){
-            placement = 7;
-            if (location <= 5){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 9)){
-            placement = 8;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 10)){
-            placement = 9;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 11)){
-            placement = 10;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 12)){
-            placement = 11;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 13)){
-            placement = 12;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 14)){
-            placement = 13;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 15)){
-            placement = 14;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 16)){
-            placement = 15;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 17)){
-            placement = 16;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 18)){
-            placement = 17;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 19)){
-            placement = 18;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 20)){
-            placement = 19;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 21)){
-            placement = 20;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        if (width < (buttonWidth * 22)){
-            placement = 21;
-            if (location <= placement){
-                return placement;
-            }
-            if (location <= (placement*2)){
-                return placement * 2;
-            }
-            if (location <= (placement*3)){
-                return placement * 3;
-            }
-            if (location <= (placement*4)){
-                return placement * 4;
-            }
-            if (location <= (placement*5)){
-                return placement * 5;
-            }
-        }
-        System.out.println("HELLO I AM HERE BUT WHY");
-        return 5;
-    }
+        System.out.println("MULTIPLYER IS: " + multiplyer);
+        return placement * multiplyer;
+
+    }//end getPanePlacement() method
 
 
-}
+}//end AddFileDirectorys class

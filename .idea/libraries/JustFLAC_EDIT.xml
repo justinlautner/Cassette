@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="JustFLAC_EDIT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/JustFLAC_EDIT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

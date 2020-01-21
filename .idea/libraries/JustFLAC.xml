@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="jflac-1.3">
+  <library name="JustFLAC">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/jflac-1.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/JustFLAC.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

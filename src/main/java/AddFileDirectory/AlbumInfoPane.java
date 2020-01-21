@@ -1,13 +1,11 @@
 package AddFileDirectory;
 
 import MusicPlayer.PlaySong;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -21,46 +19,32 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class AlbumInfoPane implements Initializable {
 
-    @FXML
-    private ImageView albumImage;
-    @FXML
-    private GridPane gridPane;
-    @FXML
-    private AnchorPane anchorPane;
-    @FXML
-    private TableView<SongDisplay> tableViewLeft;
-    @FXML
-    private TableColumn<SongDisplay, String> trackLeft;
-    @FXML
-    private TableColumn<SongDisplay, String> titleLeft;
-    @FXML
-    private TableColumn<SongDisplay, String> lengthLeft;
-    @FXML
-    private TableView<SongDisplay> tableViewRight;
-    @FXML
-    private TableColumn<SongDisplay, String> trackRight;
-    @FXML
-    private TableColumn<SongDisplay, String> titleRight;
-    @FXML
-    private TableColumn<SongDisplay, String> lengthRight;
+    @FXML private ImageView albumImage;
+    @FXML private GridPane gridPane;
+    @FXML private AnchorPane anchorPane;
+    @FXML private TableView<SongDisplay> tableViewLeft;
+    @FXML private TableColumn<SongDisplay, String> trackLeft;
+    @FXML private TableColumn<SongDisplay, String> titleLeft;
+    @FXML private TableColumn<SongDisplay, String> lengthLeft;
+    @FXML private TableView<SongDisplay> tableViewRight;
+    @FXML private TableColumn<SongDisplay, String> trackRight;
+    @FXML private TableColumn<SongDisplay, String> titleRight;
+    @FXML private TableColumn<SongDisplay, String> lengthRight;
     private ObservableList<SongDisplay> listLeft = FXCollections.observableArrayList();
     private ObservableList<SongDisplay> listRight = FXCollections.observableArrayList();
     private HashMap<SongDisplay, String> songFilePaths = new HashMap<>();
+    private PlaySong playSong = new PlaySong();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -108,23 +92,8 @@ public class AlbumInfoPane implements Initializable {
 
     }
 
-    public void setTilePane(ArrayList<Song> songs){
-        /*for (Song song : songs) {
-            //Label label = new Label();
-            System.out.println(song.getTitle());
-            *//*Text text = new Text();
-            text.setText(song.getTrack() + ". " + song.getTitle());
-            text.setStyle("-fx-font: 12 arial;");
-            text.setFill(Color.WHITE);*//*
+    public void setFlowPane(ArrayList<Song> songs){
 
-            trackLeft.get
-        }*/;
-        /*songs.sort(new Comparator<Song>() {
-            @Override
-            public int compare(Song song, Song t1) {
-                return Integer.compare(song.getTrack(), t1.getTrack());
-            }
-        });*/
         try{
             for (Song song: songs){
                 AudioFile f = AudioFileIO.read(new File(song.getFilepath()));
@@ -150,12 +119,43 @@ public class AlbumInfoPane implements Initializable {
                 }
                 songFilePaths.put(songDisplay, song.getFilepath());
             }
+            //Play chosen song from tables
             tableViewLeft.setRowFactory( tv -> {
                 TableRow<SongDisplay> row = new TableRow<>();
                 row.setOnMouseClicked(event -> {
                     if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                        PlaySong playSong = new PlaySong(songFilePaths.get(row.getItem()));
-                        playSong.kill();
+                        /*if (playSong != null){
+                            System.out.println("IS SONG BEING KILL?");
+                            //playSong.kill();
+                            //playSong.kill();
+                            *//*PCMProcessors pcmProcessors = new PCMProcessors();
+                            pcmProcessors.stop();*//*
+                        }*/
+                        //playSong = new PlaySong(songFilePaths.get(row.getItem()));
+
+                        //songLabel.setText(row.getItem().title);
+
+                        playSong.setSong(songFilePaths.get(row.getItem()));
+                        playSong.start();
+                    }
+                });
+                return row ;
+            });
+            tableViewRight.setRowFactory( tv -> {
+                TableRow<SongDisplay> row = new TableRow<>();
+                row.setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                        /*if (playSong != null){
+                            System.out.println("IS SONG BEING KILL?");
+                            //playSong.kill();
+                            *//*PCMProcessors pcmProcessors = new PCMProcessors();
+                            pcmProcessors.stop();*//*
+                        }*/
+                        //playSong = new PlaySong(songFilePaths.get(row.getItem()));
+
+                        //songLabel.setText(row.getItem().title);
+
+                        playSong.setSong(songFilePaths.get(row.getItem()));
                         playSong.start();
                     }
                 });
@@ -172,6 +172,7 @@ public class AlbumInfoPane implements Initializable {
         } catch (InvalidAudioFrameException e) {
             e.printStackTrace();
         }
-    }
 
-}
+    }//end setFlowPane() method
+
+}//end Controller Class

@@ -1,46 +1,55 @@
 package MusicPlayer;
 
+import MainPackage.Controller;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import org.kc7bfi.jflac.FLACDecoder;
 import org.kc7bfi.jflac.apps.Player;
 
 import javax.sound.sampled.LineUnavailableException;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class PlaySong extends Thread {
 
     private String song;
-    private volatile boolean running = true;
+    Player player;
+    private MediaPlayer mediaPlayer;
 
-    public PlaySong(String song){
+    public PlaySong(){
+    }
+
+    public void setSong(String song) {
         this.song = song;
     }
 
     public void run(){
 
-        running = true;
-
-        while (running){
+        if (song.endsWith(".flac")){
             try {
-                if (song.endsWith(".flac")){
-                    Player player = new Player();
-                    player.decode(song);
-                }
-                else{
-                    Media media = new Media(new File(song).toURI().toString());
-                    MediaPlayer mediaPlayer = new MediaPlayer(media);
-                    mediaPlayer.play();
-                }
-            } catch (IOException | LineUnavailableException e) {
+                System.out.println("YOU ARE HERE");
+                /*Controller controller = new Controller();
+                controller.setNowPlaying(song);*/
+                player = new Player();
+                player.decode(song);
+                /*FileInputStream is = new FileInputStream(song);
+                FLACDecoder decoder = new FLACDecoder(is);
+                decoder.decode();
+                decoder.*/
+                System.out.println("BUT NOW YOU ARE HERE");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
                 e.printStackTrace();
             }
         }
+        else{
+            Media media = new Media(new File(song).toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
+        }
 
-    }
-
-    public void kill(){
-        running = false;
     }
 
 }
