@@ -1,4 +1,4 @@
-package AddFileDirectory;
+package AlbumInfoPane;
 
 public class SongDisplay {
 

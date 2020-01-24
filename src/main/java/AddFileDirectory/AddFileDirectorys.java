@@ -1,5 +1,8 @@
 package AddFileDirectory;
 
+import AlbumInfoPane.AlbumInfoPane;
+import Music.Album;
+import Music.Song;
 import MusicPlayer.PlaySong;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
