@@ -1,7 +1,7 @@
-package AlbumInfoPane;
+package albuminfopane;
 
-import Music.Song;
-import MusicPlayer.PlaySong;
+import music.Song;
+import musicplayer.PlaySong;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

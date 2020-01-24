@@ -1,9 +1,7 @@
-package MusicPlayer;
+package musicplayer;
 
-import MainPackage.Controller;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import org.kc7bfi.jflac.FLACDecoder;
 import org.kc7bfi.jflac.apps.Player;
 
 import javax.sound.sampled.LineUnavailableException;

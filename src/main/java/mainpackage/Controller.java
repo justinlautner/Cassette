@@ -1,6 +1,6 @@
-package MainPackage;
+package mainpackage;
 
-import AddFileDirectory.AddFileDirectorys;
+import addfiledirectory.AddFileDirectorys;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

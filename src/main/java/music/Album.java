@@ -1,4 +1,4 @@
-package Music;
+package music;
 
 import java.util.ArrayList;
 
@@ -7,7 +7,7 @@ public class Album {
     private ArrayList<Song> album;
     private int numberOfAlbums = 0;
 
-    Album(ArrayList<Song> album){
+    public Album(ArrayList<Song> album){
         this.album = new ArrayList<>(album);
         this.numberOfAlbums++;
     }

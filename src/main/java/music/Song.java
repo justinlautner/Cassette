@@ -1,4 +1,4 @@
-package Music;
+package music;
 
 public class Song {
 
@@ -14,7 +14,7 @@ public class Song {
     private String discNum;
     private int numberOfSongs = 0;
 
-    Song(String filepath, int track, String title, String artist, String albumArtist, String album, String year, String lyrics, String genre, String discNum){
+    public Song(String filepath, int track, String title, String artist, String albumArtist, String album, String year, String lyrics, String genre, String discNum){
         this.filepath = filepath;
         this.track = track;
         this.title = title;

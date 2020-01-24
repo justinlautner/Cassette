@@ -1,4 +1,4 @@
-package MusicPlayer;
+package musicplayer;
 
 public class Playlist {
 }

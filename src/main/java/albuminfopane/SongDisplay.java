@@ -1,4 +1,4 @@
-package AlbumInfoPane;
+package albuminfopane;
 
 public class SongDisplay {
 
