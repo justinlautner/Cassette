@@ -70,11 +70,7 @@ public class AddFileDirectorys extends Thread {
 
     }
 
-    //TODO: Decide what type of data structure to use to hold songs/albums [HashTable to allow for fast playing of song?/Finding of file?] [Possibly Queue and Hashtable?] [Use PriorityQueue to gather songs, but then a Hashtable of them to save and use beyond that?]
-    //TODO: Should a song object inherit from album class? Or vice versa?
-    //TODO: Figure out how to get metadata, such as file type and length
     //TODO: Save state of application for reload
-    //TODO: Decide: Have class objects to hold pre-sorted groups? (album, artist, genre, etc) or sort on call?
     private void getMusic(File file) {
         File[] listOfFiles = file.listFiles();
 
@@ -170,12 +166,7 @@ public class AddFileDirectorys extends Thread {
                     }*/
                     System.out.println(singleAlbum);
                     //Album album = new Album(singleAlbum);
-                    singleAlbum.sort(new Comparator<Song>() {
-                        @Override
-                        public int compare(Song song, Song t1) {
-                            return Integer.compare(song.getTrack(), t1.getTrack());
-                        }
-                    });
+                    singleAlbum.sort(Comparator.comparingInt(Song::getTrack));
                     albumLinkedList.add(new Album(singleAlbum));
                     singleAlbum.clear();
                     for (Album temp : albumLinkedList) {
@@ -256,7 +247,6 @@ public class AddFileDirectorys extends Thread {
                 //Create listener for button to ensure desired actions upon number of mouse clicks
                 //One mouse clicks makes a drop down of songs in that album, and two place the album in its entirety
                 //TODO: Change listener does not work with maximizing the window, fix this
-                //TODO: Remove hardcoded button width
                 //TODO: Tables are uneven by a factor of one when even number of songs
                 //TODO: Diversify classes better, less code on each class
                 button.setOnMouseClicked(mouseEvent -> {
@@ -294,20 +284,17 @@ public class AddFileDirectorys extends Thread {
 
                                 controller.setFlowPane(album.getAlbum());
                                 pane.setPrefWidth(flowPane.getWidth());
-                                scrollPane.widthProperty().addListener(new ChangeListener<Number>() {
-                                    @Override
-                                    public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                                        pane.setPrefWidth((Double) number);
-                                        if (albumIsOpen){
-                                            flowPane.getChildren().remove(pane);
-                                            int panePlacement = getPanePlacement(buttonLocation.get(button), 168);
-                                            //This prevents attempts at adding the pane at a higher number than the flowPane has
-                                            if (panePlacement > flowPane.getChildren().size()){
-                                                flowPane.getChildren().add(flowPane.getChildren().size(), pane);
-                                            }
-                                            else{
-                                                flowPane.getChildren().add(panePlacement, pane);
-                                            }
+                                scrollPane.widthProperty().addListener((observableValue, number, t1) -> {
+                                    pane.setPrefWidth((Double) number);
+                                    if (albumIsOpen){
+                                        flowPane.getChildren().remove(pane);
+                                        int panePlacement = getPanePlacement(buttonLocation.get(button), 168);
+                                        //This prevents attempts at adding the pane at a higher number than the flowPane has
+                                        if (panePlacement > flowPane.getChildren().size()){
+                                            flowPane.getChildren().add(flowPane.getChildren().size(), pane);
+                                        }
+                                        else{
+                                            flowPane.getChildren().add(panePlacement, pane);
                                         }
                                     }
                                 });//end ChangeListener
