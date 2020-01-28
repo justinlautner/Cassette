@@ -13,8 +13,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -38,6 +42,14 @@ public class Controller implements Initializable {
         this.nextTrackButton.setGraphic(new ImageView(new Image("images/nextTrackButton.png", 50, 58, true, true)));
         this.stopButton.setGraphic(new ImageView(new Image("images/stopButton.png", 50, 58, true, true)));
 
+        //If directory saved load library upon program start
+        Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
+        Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
+        if (Files.exists(savedAlbums) & Files.exists(savedSongs)){
+            MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane);
+            musicScene.setMusicScene();
+        }
+
     }
 
     @FXML
@@ -55,6 +67,7 @@ public class Controller implements Initializable {
             AddFileDirectorys addFileDirectorys = new AddFileDirectorys(chosenFolder, vBox, flowPane, progressBar, scrollPane);
             addFileDirectorys.start();
         }
+
 
     }
 

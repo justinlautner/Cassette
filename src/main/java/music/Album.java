@@ -1,8 +1,9 @@
 package music;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Album {
+public class Album implements Serializable {
 
     private ArrayList<Song> album;
     private int numberOfAlbums = 0;
