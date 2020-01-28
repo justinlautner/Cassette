@@ -1,22 +1,12 @@
 package addfiledirectory;
 
-import albuminfopane.AlbumInfoPane;
 import mainpackage.MusicScene;
 import music.Album;
 import music.Song;
 import musicplayer.PlaySong;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.CacheHint;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -47,11 +37,6 @@ public class AddFileDirectorys extends Thread {
     private ArrayList<String> genres = new ArrayList<>();
     private ArrayList<String> albums = new ArrayList<>();
     private ArrayList<Song> singleAlbum = new ArrayList<>();
-    private HashMap<Button, Integer> buttonLocation = new HashMap<>();
-    private int locationNumber = 1, lastButtonChosen = 0;
-    private Pane pane;
-    private boolean albumIsOpen;
-    private PlaySong playSong = new PlaySong();
 
     public AddFileDirectorys(File file, VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane){
 
@@ -72,21 +57,12 @@ public class AddFileDirectorys extends Thread {
         try{
             Path pathToDirectories = Paths.get("src/main/resources/saves/directories.txt");
             if (Files.exists(pathToDirectories)){
-                /*FileInputStream in = new FileInputStream(pathToDirectories.toString());
-                String directories = in.toString();*/
                 List<String> listOfDirectories = Files.readAllLines(pathToDirectories);
                 if (!listOfDirectories.contains(chosenDirectory.toString())){
-                    /*FileOutputStream fileOutputStream = new FileOutputStream(pathToDirectories.toString());
-                    fileOutputStream.w*/
                     System.out.println("DIRECTORY WAS FOUND IN FILE");
                     PrintWriter out = new PrintWriter(pathToDirectories.toString());
                     out.println(pathToDirectories.toString());
 
-                    /*for (String string: listOfDirectories){
-                        getMusic(new File(string));
-                        //setMusicScene();
-                        setMusic();
-                    }*/
                     out.flush();
                     out.close();
                 }
@@ -112,21 +88,20 @@ public class AddFileDirectorys extends Thread {
             }
             setMusic();
 
-            for (Album album: albumLinkedList){
-                System.out.println(album.getSong(0).getAlbum());
-            }
             File albumsFile = new File(savedAlbums.toString());
             File songsFile = new File(savedSongs.toString());
             FileOutputStream songsOutputStream = new FileOutputStream(songsFile);
             FileOutputStream albumsOutputStream = new FileOutputStream(albumsFile);
             ObjectOutputStream albumsOut = new ObjectOutputStream(albumsOutputStream);
             ObjectOutputStream songsOut = new ObjectOutputStream(songsOutputStream);
+
             for (Song song: songLinkedList){
                 songsOut.writeObject(song);
             }
             for (Album album: albumLinkedList){
                 albumsOut.writeObject(album);
             }
+
             albumsOut.flush();
             songsOut.flush();
             albumsOut.close();

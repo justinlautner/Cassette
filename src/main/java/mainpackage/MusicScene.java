@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import music.Album;
 import music.Song;
 import musicplayer.PlaySong;
+import musicplayer.Playlist;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -28,7 +29,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.Collator;
 import java.util.*;
 
 public class MusicScene {
@@ -41,8 +41,6 @@ public class MusicScene {
     private LinkedList<Album> albumLinkedList = new LinkedList<>();
     //private LinkedList<Genre> genreLinkedList = new LinkedList<>();
     private ArrayList<String> genres = new ArrayList<>();
-    private ArrayList<String> albums = new ArrayList<>();
-    private ArrayList<Song> singleAlbum = new ArrayList<>();
     private HashMap<Button, Integer> buttonLocation = new HashMap<>();
     private int locationNumber = 1, lastButtonChosen = 0;
     private Pane pane;
@@ -60,18 +58,15 @@ public class MusicScene {
         try{
             Path pathToDirectories = Paths.get("src/main/resources/saves/directories.txt");
             if (Files.exists(pathToDirectories)){
-                /*FileInputStream in = new FileInputStream(pathToDirectories.toString());
-                String directories = in.toString();*/
-                List<String> listOfDirectories = Files.readAllLines(pathToDirectories);
+
                 Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
                 Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
+
                 if (Files.exists(savedAlbums) && Files.exists(savedSongs)){
                     System.out.println("SAVED ALBUMS AND SONGS WERE FOUND");
+
                     FileInputStream albumsIn = new FileInputStream(savedAlbums.toString());
                     ObjectInputStream albumObjIn = new ObjectInputStream(albumsIn);
-                    FileInputStream songsIn = new FileInputStream(savedSongs.toString());
-                    ObjectInputStream songObjIn = new ObjectInputStream(songsIn);
-
                     try{
                         while (true){
                             albumLinkedList.add((Album) albumObjIn.readObject());
@@ -80,10 +75,13 @@ public class MusicScene {
 
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
+                    } finally {
+                        albumObjIn.close();
+                        albumsIn.close();
                     }
-                    for (Album album: albumLinkedList){
-                        System.out.println(album.getSong(0).getAlbum());
-                    }
+
+                    FileInputStream songsIn = new FileInputStream(savedSongs.toString());
+                    ObjectInputStream songObjIn = new ObjectInputStream(songsIn);
                     try{
                         while (true){
                             songLinkedList.add((Song) songObjIn.readObject());
@@ -92,12 +90,10 @@ public class MusicScene {
 
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
+                    } finally {
+                        songObjIn.close();
+                        songsIn.close();
                     }
-
-                    albumObjIn.close();
-                    songObjIn.close();
-                    albumsIn.close();
-                    songsIn.close();
 
                 }
             }
@@ -183,10 +179,9 @@ public class MusicScene {
                 //TODO: Diversify classes better, less code on each class
                 button.setOnMouseClicked(mouseEvent -> {
                     if (mouseEvent.getClickCount() == 2){
-                        //playSong = new PlaySong(song.getFilepath());
-                        //playSong.start();
-                        playSong.setSong(song.getFilepath());
-                        playSong.start();
+                        Playlist playlist = new Playlist();
+                        playlist.addSongs(album.getAlbum());
+                        playlist.start();
                     }
                     if (mouseEvent.getClickCount() == 1){
                         if (lastButtonChosen == buttonLocation.get(button) && albumIsOpen){
