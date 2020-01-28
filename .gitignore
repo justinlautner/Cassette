@@ -17,8 +17,8 @@
 hs_err_pid*
 
 #IntelliJ
-*.iml
-.idea/
+#*.iml
+#.idea/
 
 #Generated Files
 out/
