@@ -2,7 +2,7 @@
 {
     -fx-background-color: #454545;
 }
-.button
+.button, .text-field
 {
     -fx-background-color: #454545;
     -fx-text-fill: white;

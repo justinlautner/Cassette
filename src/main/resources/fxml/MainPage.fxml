@@ -1,93 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="mainpackage.Controller">
-    <BorderPane fx:id="borderPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css"
-                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                AnchorPane.topAnchor="0.0">
-        <top>
-            <MenuBar fx:id="menuBar" stylesheets="@../styles/generalStyle.css" BorderPane.alignment="CENTER">
-                <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
-                    <MenuItem fx:id="addFilesItem" mnemonicParsing="false" onAction="#addFiles"
-                              text="Add Files to Library"/>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <MenuItem mnemonicParsing="false" text="Delete"/>
-                </Menu>
-                <Menu mnemonicParsing="false" text="View">
-                    <MenuItem mnemonicParsing="false" text="Action 1"/>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Controls">
-                    <MenuItem mnemonicParsing="false" text="Action 1"/>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Tools">
-                    <MenuItem mnemonicParsing="false" text="Your Library..."/>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <MenuItem mnemonicParsing="false" text="About"/>
-                </Menu>
-            </MenuBar>
-        </top>
-        <bottom>
-            <HBox maxHeight="58.0" maxWidth="1.7976931348623157E308" minHeight="58.0" prefHeight="58.0"
-                  style="-fx-background-color: #2c2c2c;;" stylesheets="@../styles/generalStyle.css"
-                  BorderPane.alignment="CENTER">
-                <ImageView fitHeight="58.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true"
-                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                           AnchorPane.topAnchor="0.0"/>
-                <VBox prefWidth="145.0">
-                    <Label fx:id="songLabel" prefHeight="15.0" prefWidth="145.0"/>
-                    <Label fx:id="artistLabel" prefHeight="15.0" prefWidth="128.0"/>
-                    <Label fx:id="albumLabel" prefHeight="15.0" prefWidth="128.0"/>
-                </VBox>
-                <Button fx:id="previousTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0"
-                        maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0"
-                        prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="208.0"
-                        AnchorPane.rightAnchor="331.0" AnchorPane.topAnchor="0.0"/>
-                <Button fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0"
-                        maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0"
-                        prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="269.0"
-                        AnchorPane.rightAnchor="269.0" AnchorPane.topAnchor="0.0"/>
-                <Button fx:id="stopButton" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0"
-                        mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0"/>
-                <Button fx:id="nextTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0"
-                        maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0"
-                        prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="331.0"
-                        AnchorPane.rightAnchor="208.0" AnchorPane.topAnchor="0.0"/>
-            </HBox>
-        </bottom>
-    </BorderPane>
-    <SplitPane fx:id="splitPane" dividerPositions="0.15" layoutY="30.0" stylesheets="@../styles/generalStyle.css"
-               AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-               AnchorPane.topAnchor="29.0" SplitPane.resizableWithParent="false">
-        <AnchorPane fx:id="leftAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
-                    stylesheets="@../styles/generalStyle.css" SplitPane.resizableWithParent="false">
-            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0"
-                        stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0"
-                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                <VBox fx:id="vBox" prefHeight="369.0" prefWidth="116.0"
-                      stylesheets="@../styles/generalStyle.css">
-                    <Label fx:id="genresLabel" prefHeight="25.0" prefWidth="143.0"
-                           stylesheets="@../styles/generalStyle.css" text="Genres"
-                           textAlignment="CENTER"/>
-                    <Separator prefWidth="200.0" stylesheets="@../styles/generalStyle.css"/>
-                </VBox>
-            </ScrollPane>
-        </AnchorPane>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
-                    stylesheets="@../styles/generalStyle.css" SplitPane.resizableWithParent="false">
-            <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0"
-                        prefWidth="200.0" stylesheets="@../styles/generalStyle.css"
-                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                        AnchorPane.topAnchor="0.0">
-                <FlowPane fx:id="flowPane" prefHeight="200.0" rowValignment="TOP"/>
-            </ScrollPane>
-        </AnchorPane>
-    </SplitPane>
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpackage.Controller">
+   <children>
+       <BorderPane fx:id="borderPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           <top>
+               <MenuBar fx:id="menuBar" stylesheets="@../styles/generalStyle.css" BorderPane.alignment="CENTER">
+                  <menus>
+                      <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+                         <items>
+                             <MenuItem fx:id="addFilesItem" mnemonicParsing="false" onAction="#addFiles" text="Add Files to Library" />
+                         </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Edit">
+                         <items>
+                             <MenuItem mnemonicParsing="false" text="Delete" />
+                         </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="View">
+                         <items>
+                             <MenuItem mnemonicParsing="false" text="Action 1" />
+                         </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Controls">
+                         <items>
+                             <MenuItem mnemonicParsing="false" text="Action 1" />
+                         </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Tools">
+                         <items>
+                             <MenuItem mnemonicParsing="false" text="Your Library..." />
+                         </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Help">
+                         <items>
+                             <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#aboutScene" text="About Cassette..." />
+                         </items>
+                      </Menu>
+                  </menus>
+               </MenuBar>
+           </top>
+           <bottom>
+               <HBox maxHeight="58.0" maxWidth="1.7976931348623157E308" minHeight="58.0" prefHeight="58.0" style="-fx-background-color: #2c2c2c;;" stylesheets="@../styles/generalStyle.css" BorderPane.alignment="CENTER">
+                  <children>
+                      <ImageView fx:id="nowPlayingCover" fitHeight="58.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                      <VBox prefWidth="145.0" stylesheets="@../styles/generalStyle.css">
+                         <children>
+                             <Label fx:id="songLabel" prefHeight="15.0" prefWidth="145.0" />
+                             <Label fx:id="artistLabel" prefHeight="15.0" prefWidth="128.0" />
+                             <Label fx:id="albumLabel" prefHeight="15.0" prefWidth="128.0" />
+                         </children>
+                      </VBox>
+                      <Button fx:id="previousTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="208.0" AnchorPane.rightAnchor="331.0" AnchorPane.topAnchor="0.0" />
+                      <Button fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="269.0" AnchorPane.rightAnchor="269.0" AnchorPane.topAnchor="0.0" />
+                      <Button fx:id="stopButton" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" />
+                      <Button fx:id="nextTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="331.0" AnchorPane.rightAnchor="208.0" AnchorPane.topAnchor="0.0" />
+                  <ToggleButton fx:id="toggleViewButton" mnemonicParsing="false" onMouseClicked="#toggleViewButtonOnClick" text="ToggleButton" />
+                  </children>
+               </HBox>
+           </bottom>
+       </BorderPane>
+       <SplitPane fx:id="splitPane" dividerPositions="0.15" layoutY="30.0" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="58.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" SplitPane.resizableWithParent="false">
+          <items>
+              <AnchorPane fx:id="leftAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@../styles/generalStyle.css" SplitPane.resizableWithParent="false">
+                 <children>
+                     <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <content>
+                            <VBox fx:id="vBox" prefHeight="369.0" prefWidth="116.0" stylesheets="@../styles/generalStyle.css">
+                               <children>
+                              <TextField promptText="Search for music here" stylesheets="@../styles/generalStyle.css">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets right="5.0" />
+                                 </VBox.margin>
+                              </TextField>
+                                   <Label fx:id="genresLabel" prefHeight="25.0" prefWidth="143.0" stylesheets="@../styles/generalStyle.css" text="Genres" textAlignment="CENTER">
+                                 <VBox.margin>
+                                    <Insets right="5.0" />
+                                 </VBox.margin></Label>
+                                   <Separator prefWidth="200.0" stylesheets="@../styles/generalStyle.css">
+                                 <VBox.margin>
+                                    <Insets right="5.0" />
+                                 </VBox.margin></Separator>
+                               </children>
+                            </VBox>
+                        </content>
+                     </ScrollPane>
+                 </children>
+              </AnchorPane>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@../styles/generalStyle.css" SplitPane.resizableWithParent="false">
+                 <children>
+                     <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <content>
+                            <FlowPane fx:id="flowPane" prefHeight="200.0" rowValignment="TOP" />
+                        </content>
+                     </ScrollPane>
+                 </children>
+              </AnchorPane>
+          </items>
+       </SplitPane>
+   </children>
 </AnchorPane>
