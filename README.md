@@ -18,4 +18,4 @@ Do you ever feel like the slog heap of available music players are all missing a
 - Looking to expand these in future releases.
 ```
 ### Screenshots
-![Album Cover View](Screenshots/Casssette_Album-View_Dropdown.png "A small taste of what is to come")
+![Album Cover View](screenshots/Casssette_Album-View_Dropdown.png "A small taste of what is to come")
