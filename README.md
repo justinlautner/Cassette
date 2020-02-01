@@ -1,4 +1,4 @@
-# Cassette Music Player ![Version](https://img.shields.io/badge/Version-v0.1--alpha-red "alpha")
+# Cassette Music Player ![Version](https://img.shields.io/badge/Version-v0.2--alpha-red "alpha")
 
 Do you ever feel like the slog heap of available music players are all missing a few features that the other one has? Sick of having to pick and choose between features and programs, this is my attempt at combining them all into one. For the betterment of the human race, of course.
 
@@ -17,3 +17,5 @@ Do you ever feel like the slog heap of available music players are all missing a
 - Tags: Mp3, Mp4 (Mp4 audio, M4a and M4p audio) Ogg Vorbis, Flac, Wav, Aif, Dsf and Wma
 - Looking to expand these in future releases.
 ```
+### Screenshots
+![Album Cover View](Screenshots/Casssette_Album-View_Dropdown.png "A small taste of what is to come")
