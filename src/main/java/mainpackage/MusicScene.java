@@ -45,7 +45,9 @@ public class MusicScene {
     private int locationNumber = 1, lastButtonChosen = 0;
     private Pane pane;
     private boolean albumIsOpen;
-    private PlaySong playSong = new PlaySong();
+    //private PlaySong playSong = new PlaySong();
+    //TODO: Program takes 21 seconds to start, loading 10k plus songs. I can do better!
+    //TODO: Opening an album has a slight delay, this can be improved
 
     public MusicScene(VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane){
 
@@ -279,20 +281,16 @@ public class MusicScene {
         double width = flowPane.getWidth();
         int placement = 6;
 
-        System.out.println("location: " + location);
-        System.out.println("button width: " + buttonWidth);
-
         while (width > (buttonWidth * placement)){
             placement++;
         }
         placement -= 1;
-        System.out.println("PLACEMENT IS: " + placement);
 
         int multiplyer = 1;
         while (location > placement * multiplyer){
             multiplyer++;
         }
-        System.out.println("MULTIPLYER IS: " + multiplyer);
+
         return placement * multiplyer;
 
     }//end getPanePlacement() method

@@ -9,6 +9,7 @@ import java.io.*;
 
 public class PlaySong extends Thread {
 
+    //TODO: Add ability to pause, play, and seek songs
     private String song;
     Player player;
     private MediaPlayer mediaPlayer;

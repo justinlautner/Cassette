@@ -25,7 +25,6 @@ import java.util.*;
 
 public class AddFileDirectorys extends Thread {
 
-    //TODO: figure out save format for library for reuse
     private File chosenDirectory;
     private VBox vBox;
     private FlowPane flowPane;
