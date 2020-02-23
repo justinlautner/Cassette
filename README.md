@@ -20,6 +20,8 @@ Do you ever feel like the slog heap of available music players are all missing a
 ```
 ### Screenshots
 ![Album Cover View](screenshots/Cassette_Album_View_Dropdown_2.png "A small taste of what is to come")
+
+![Playlist View](screenshots/Cassette_Playlist_View.png "Making additions to that small taste")
 ### Getting Started
 ##### Installing
 ```
