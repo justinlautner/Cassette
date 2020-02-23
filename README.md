@@ -1,4 +1,4 @@
-# Cassette Music Player ![Version](https://img.shields.io/badge/Version-v0.2--alpha-red "alpha")
+# Cassette Music Player ![Version](https://img.shields.io/badge/Version-v0.5--pre--alpha-red "pre-alpha")
 
 Do you ever feel like the slog heap of available music players are all missing a few features that the other one has? Sick of having to pick and choose between features and programs? This is my attempt at combining them all into one. For the betterment of the human race, of course.
 
@@ -7,6 +7,7 @@ Do you ever feel like the slog heap of available music players are all missing a
 ##### Things you might enjoy
 ```
 - Album artwork discovery pane, for choosing music from those pretty pictures.
+- An equally loveable playlist pane, for crafting that perfect music listening experience
 - List of genres, to browse through based on which type of music you wish to lose yourself to.
 - Dark mode built-in, because well, we all know basement dwellers dont like bright lights.
 - Attempts to offer the largest amount of functinality without compromising ease of use and aesthetic.

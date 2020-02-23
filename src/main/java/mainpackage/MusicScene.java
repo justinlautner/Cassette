@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import music.Album;
 import music.Song;
-import musicplayer.PlaySong;
 import musicplayer.Playlist;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -45,10 +44,72 @@ public class MusicScene {
     private int locationNumber = 1, lastButtonChosen = 0;
     private Pane pane;
     private boolean albumIsOpen;
-    //private PlaySong playSong = new PlaySong();
-    //TODO: Program takes 21 seconds to start, loading 10k plus songs. I can do better!
-    //TODO: Opening an album has a slight delay, this can be improved
+    private Playlist playlist;
 
+    //TODO: Program takes 21 seconds to start, loading 10k plus songs. I can do better!
+    //TODO: Create dynamic album lines, so that there is not a < album sized gap before moving one up
+
+    //THIS IS FOR LOAD DIRECTORY
+    public MusicScene(VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane, Playlist playlist){
+
+        this.vBox = vBox;
+        this.flowPane = flowPane;
+        this.progressBar = progressBar;
+        this.scrollPane = scrollPane;
+        this.playlist = playlist;
+
+        System.out.println("PROCESS BEGIN");
+        try{
+            Path pathToDirectories = Paths.get("src/main/resources/saves/directories.txt");
+            if (Files.exists(pathToDirectories)){
+
+                Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
+                Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
+
+                if (Files.exists(savedAlbums) && Files.exists(savedSongs)){
+                    System.out.println("SAVED ALBUMS AND SONGS WERE FOUND");
+
+                    FileInputStream albumsIn = new FileInputStream(savedAlbums.toString());
+                    ObjectInputStream albumObjIn = new ObjectInputStream(albumsIn);
+                    try{
+                        while (true){
+                            albumLinkedList.add((Album) albumObjIn.readObject());
+                        }
+                    } catch (EOFException ignored){
+
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } finally {
+                        albumObjIn.close();
+                        albumsIn.close();
+                    }
+
+                    FileInputStream songsIn = new FileInputStream(savedSongs.toString());
+                    ObjectInputStream songObjIn = new ObjectInputStream(songsIn);
+                    try{
+                        while (true){
+                            songLinkedList.add((Song) songObjIn.readObject());
+                        }
+                    } catch (EOFException ignored){
+
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } finally {
+                        songObjIn.close();
+                        songsIn.close();
+                    }
+
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    //THIS IS FOR ADD DIRECTORY
+    //TODO; change if thans to reflect only the situation being passed, and pass controller to playlist another way
     public MusicScene(VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane){
 
         this.vBox = vBox;
@@ -110,12 +171,10 @@ public class MusicScene {
         //Sort songs by album artist, as is my preference
         //TODO: Edit this sort to allow user to change comparators, e.g. album or year
 
-        //sort genres for alphabetical ordering
-        Collections.sort(genres);
-
         //Create buttons for each genre
         Accordion accordion = new Accordion();
-        for (String s: genres){
+        accordion.getStyleClass().add("genreMenuStyle.css");
+        for (Album album : albumLinkedList){
             /*ToggleButton toggleButton = new ToggleButton();
             Image check = new Image("images/check.png", 10, 10, true, true);
             Image unCheck = new Image("images/uncheck.png", 10, 10, true, true);
@@ -127,6 +186,15 @@ public class MusicScene {
             toggleButton.setAlignment(Pos.CENTER);
             vBox.getChildren().add(toggleButton);*/
 
+            if (!genres.contains(album.getSong(0).getGenre())){
+                genres.add(album.getSong(0).getGenre());
+            }
+        }
+
+        //sort genres for alphabetical ordering
+        Collections.sort(genres);
+
+        for (String s : genres){
             TitledPane titledPane = new TitledPane();
             Image check = new Image("images/check.png", 10, 10, true, true);
             Image unCheck = new Image("images/uncheck.png", 10, 10, true, true);
@@ -134,10 +202,11 @@ public class MusicScene {
             imageView.imageProperty().bind(Bindings.when(titledPane.expandedProperty()).then(check).otherwise(unCheck));
             titledPane.setGraphic(imageView);
             titledPane.setText(s);
-            titledPane.getStyleClass().add("generalStyle.css");
+            titledPane.getStyleClass().add("genreMenuStyle.css");
             titledPane.setAlignment(Pos.CENTER);
             accordion.getPanes().add(titledPane);
         }
+
         vBox.getChildren().add(accordion);
 
         //Add album buttons from which to search through and choose songs to play
@@ -181,23 +250,36 @@ public class MusicScene {
                 //TODO: Diversify classes better, less code on each class
                 button.setOnMouseClicked(mouseEvent -> {
                     if (mouseEvent.getClickCount() == 2){
-                        Playlist playlist = new Playlist();
+
                         playlist.addSongs(album.getAlbum());
-                        playlist.start();
+
+                        if (!playlist.isAlive()){
+                            playlist.start();
+                        }
+
                     }
                     if (mouseEvent.getClickCount() == 1){
                         if (lastButtonChosen == buttonLocation.get(button) && albumIsOpen){
+
+                            //If the same album is chosen a second time, close it
                             flowPane.getChildren().remove(pane);
                             albumIsOpen = false;
+
                         }
                         else{
+
+                            //Remove the old pane, if one is open, and open a new
                             albumIsOpen = true;
                             flowPane.getChildren().remove(pane);
+
                             try {
+
+                                //Load album info pane according to the chosen button
                                 lastButtonChosen = buttonLocation.get(button);
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AlbumInfoPane.fxml"));
                                 pane = loader.load();
                                 AlbumInfoPane controller = loader.getController();
+                                controller.setPlaylist(playlist);
 
                                 Image tempImage;
                                 if (!tag.hasField(FieldKey.COVER_ART)){
@@ -211,8 +293,11 @@ public class MusicScene {
                                 pane.setStyle("-fx-background-color: " + convertRGBToHex(tempImage));
                                 controller.setStyle(convertRGBToHex(tempImage));
 
+                                //Set and determine width of album info pane, and add a listener in case the entire window changes size
                                 controller.setFlowPane(album.getAlbum());
                                 pane.setPrefWidth(flowPane.getWidth());
+                                //Choose where in the flow to place the pane (under the album's row)
+                                //TODO: add arrow pointing towards relevant album? Find position relevant to row and place it there
                                 scrollPane.widthProperty().addListener((observableValue, number, t1) -> {
                                     pane.setPrefWidth((Double) number);
                                     if (albumIsOpen){
@@ -236,6 +321,7 @@ public class MusicScene {
                                 else{
                                     flowPane.getChildren().add(panePlacement, pane);
                                 }
+
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -266,20 +352,23 @@ public class MusicScene {
 
     private String convertRGBToHex(Image image){
 
+        //This returns the hex formatted color to set the pane's background color the same as the album
         Color color = image.getPixelReader().getColor(0,0);
 
         return String.format("#%02x%02x%02x", (int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255));
     }
 
     private int getPanePlacement(int location, double buttonWidth){
+
         /*
          * This method determines where to place the dropdown album pane in the graph so that it is under the chosen object
          * By judging the width of the pane, you can tell how many album covers will fit inside the window
          * Using the location number (which shows which album was chosen, you can estimate which row is needed to place the dropdown under
          * e.g. if there are 6 albums in a row, and you choose the 20th album, you place the dropdown after that row which would be 4th row (6*4=24)
          */
+
         double width = flowPane.getWidth();
-        int placement = 6;
+        int placement = 1;
 
         while (width > (buttonWidth * placement)){
             placement++;

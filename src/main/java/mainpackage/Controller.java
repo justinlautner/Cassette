@@ -1,9 +1,12 @@
 package mainpackage;
 
 import addfiledirectory.AddFileDirectorys;
-import javafx.beans.value.ChangeListener;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -11,18 +14,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import musicplayer.Playlist;
+import playlistscene.PlaylistScene;
 
-import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,14 +34,17 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML private AnchorPane anchorPane;
+    @FXML private StackPane stackPane;
     @FXML private VBox vBox;
-    @FXML private FlowPane flowPane;
-    @FXML private ScrollPane scrollPane;
+    private ScrollPane scrollPane;
     @FXML private ProgressBar progressBar;
     @FXML private Button playButton, previousTrackButton, nextTrackButton, stopButton;
     @FXML private Label songLabel, artistLabel, albumLabel;
     @FXML private ToggleButton toggleViewButton;
     @FXML private ImageView nowPlayingCover;
+    private FlowPane flowPane;
+    private PlaylistScene playlistScene;
+    private Stage primaryStage;
 
     public Controller(){}
 
@@ -55,14 +60,38 @@ public class Controller implements Initializable {
         this.toggleViewButton.setSelected(false);
         this.toggleViewButton.setText("Playlist View");
 
+        try {
+
+            //Load panes and add them to the stackPane, to immediately instantiate playlist and album discovery views
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/PlaylistScene.fxml"));
+            AnchorPane anchorPane;
+            anchorPane = loader.load();
+            stackPane.getChildren().add(anchorPane);
+            playlistScene = loader.getController();
+            loader = new FXMLLoader(getClass().getResource("/fxml/AlbumDiscoveryPane.fxml"));
+            scrollPane = loader.load();
+            stackPane.getChildren().add(scrollPane);
+            AlbumDiscoveryPane albumDiscoveryPane = loader.getController();
+            flowPane = albumDiscoveryPane.flowPane;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void loadMusic(){
         //If directory saved load library upon program start
         Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
         Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
         if (Files.exists(savedAlbums) & Files.exists(savedSongs)){
-            MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane);
+            MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane, new Playlist(Controller.this, playlistScene, primaryStage));
             musicScene.setMusicScene();
         }
+    }
 
+    public void setStage(Stage primaryStage){
+        this.primaryStage = primaryStage;
     }
 
     @FXML
@@ -84,9 +113,35 @@ public class Controller implements Initializable {
 
     }
 
+    public void setNowPlaying(String songName, String artistName, String albumName, Image image){
+
+        Platform.runLater(() -> {
+            songLabel.setText(songName);
+            artistLabel.setText(artistName);
+            albumLabel.setText(albumName);
+            nowPlayingCover.setImage(image);
+        });
+
+    }
+
     @FXML
     private void toggleViewButtonOnClick(){
 
+        //Change views on toggle, bringing proper pane to front of stack and hiding the other
+        ObservableList<Node> childs = this.stackPane.getChildren();
+        Node topNode = childs.get(childs.size()-1);
+
+        //This node will be brought to the front
+        Node newTopNode = childs.get(childs.size()-2);
+
+        //Hide the node not in the front of the stack
+        topNode.setVisible(false);
+        topNode.toBack();
+
+        newTopNode.setVisible(true);
+
+        //Change toggle button according to which view is selected
+        //Text allows for new users to realize that they can change views
         if (toggleViewButton.isSelected()){
             toggleViewButton.setText("Album Art View");
         }
@@ -99,6 +154,7 @@ public class Controller implements Initializable {
     @FXML
     private void aboutScene(){
 
+        //Create a scene to show authors, dependencies and inspirations
         final Stage about = new Stage();
         about.initModality(Modality.APPLICATION_MODAL);
         about.setTitle("About Cassette...");

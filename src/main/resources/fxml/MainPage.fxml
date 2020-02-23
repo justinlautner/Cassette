@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpackage.Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1425.0" stylesheets="@../styles/generalStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpackage.Controller">
    <children>
        <BorderPane fx:id="borderPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <top>
@@ -47,21 +47,25 @@
                </MenuBar>
            </top>
            <bottom>
-               <HBox maxHeight="58.0" maxWidth="1.7976931348623157E308" minHeight="58.0" prefHeight="58.0" style="-fx-background-color: #2c2c2c;;" stylesheets="@../styles/generalStyle.css" BorderPane.alignment="CENTER">
+               <HBox maxHeight="58.0" maxWidth="1.7976931348623157E308" minHeight="58.0" prefHeight="58.0" spacing="5.0" style="-fx-background-color: #2c2c2c;;" stylesheets="@../styles/generalStyle.css" BorderPane.alignment="CENTER">
                   <children>
                       <ImageView fx:id="nowPlayingCover" fitHeight="58.0" fitWidth="58.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                      <VBox prefWidth="145.0" stylesheets="@../styles/generalStyle.css">
+                      <VBox prefHeight="58.0" prefWidth="130.0" spacing="2.0" stylesheets="@../styles/generalStyle.css">
                          <children>
-                             <Label fx:id="songLabel" prefHeight="15.0" prefWidth="145.0" />
-                             <Label fx:id="artistLabel" prefHeight="15.0" prefWidth="128.0" />
-                             <Label fx:id="albumLabel" prefHeight="15.0" prefWidth="128.0" />
+                             <Label fx:id="songLabel" />
+                             <Label fx:id="artistLabel" />
+                             <Label fx:id="albumLabel" />
                          </children>
                       </VBox>
-                      <Button fx:id="previousTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="208.0" AnchorPane.rightAnchor="331.0" AnchorPane.topAnchor="0.0" />
-                      <Button fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="269.0" AnchorPane.rightAnchor="269.0" AnchorPane.topAnchor="0.0" />
-                      <Button fx:id="stopButton" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" />
-                      <Button fx:id="nextTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="331.0" AnchorPane.rightAnchor="208.0" AnchorPane.topAnchor="0.0" />
-                  <ToggleButton fx:id="toggleViewButton" mnemonicParsing="false" onMouseClicked="#toggleViewButtonOnClick" text="ToggleButton" />
+                  <HBox prefHeight="58.0" prefWidth="330.0">
+                     <children>
+                            <Button fx:id="previousTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" />
+                            <Button fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" />
+                            <Button fx:id="stopButton" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" />
+                            <Button fx:id="nextTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="50.0" />
+                        <ToggleButton fx:id="toggleViewButton" mnemonicParsing="false" onMouseClicked="#toggleViewButtonOnClick" text="ToggleButton" />
+                     </children>
+                  </HBox>
                   </children>
                </HBox>
            </bottom>
@@ -96,13 +100,9 @@
                      </ScrollPane>
                  </children>
               </AnchorPane>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@../styles/generalStyle.css" SplitPane.resizableWithParent="false">
+              <AnchorPane fx:id="anchorPaneDiscovery" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@../styles/generalStyle.css" SplitPane.resizableWithParent="false">
                  <children>
-                     <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                        <content>
-                            <FlowPane fx:id="flowPane" prefHeight="200.0" rowValignment="TOP" />
-                        </content>
-                     </ScrollPane>
+                  <StackPane fx:id="stackPane" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                  </children>
               </AnchorPane>
           </items>

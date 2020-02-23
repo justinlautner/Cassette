@@ -14,9 +14,15 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         //The basics
         URL url = new File("src/main/resources/fxml/MainPage.fxml").toURI().toURL();
-        Parent root = FXMLLoader.load(url);
+        FXMLLoader loader = new FXMLLoader(url);
+        Parent root = loader.load();
+        Controller controller = loader.getController();
+
+        //Send stage to playlist, to change title according to now playing
+        controller.setStage(primaryStage);
+        controller.loadMusic();
         primaryStage.setTitle("Cassette");
-        primaryStage.setScene(new Scene(root, 900, 475));
+        primaryStage.setScene(new Scene(root, 1425, 775));
 
         primaryStage.show();
     }//end start method

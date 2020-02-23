@@ -1,7 +1,6 @@
 package albuminfopane;
 
 import music.Song;
-import musicplayer.PlaySong;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import musicplayer.Playlist;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -43,8 +43,8 @@ public class AlbumInfoPane implements Initializable {
     @FXML private TableColumn<SongDisplay, String> lengthRight;
     private ObservableList<SongDisplay> listLeft = FXCollections.observableArrayList();
     private ObservableList<SongDisplay> listRight = FXCollections.observableArrayList();
-    private HashMap<SongDisplay, String> songFilePaths = new HashMap<>();
-    private PlaySong playSong = new PlaySong();
+    private HashMap<SongDisplay, Song> songHashMap = new HashMap<>();
+    private Playlist playlist;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,8 +62,10 @@ public class AlbumInfoPane implements Initializable {
 
         tableViewRight.setItems(listRight);
 
-        /*tableViewLeft.setStyle("-fx-selection-bar: #7a330d; -fx-selection-bar-non-focused: #454545;");
-        tableViewRight.setStyle("-fx-selection-bar: #7a330d; -fx-selection-bar-non-focused: #454545;");*/
+    }
+
+    public void setPlaylist(Playlist playlist){
+        this.playlist = playlist;
     }
 
     public AlbumInfoPane(){
@@ -117,50 +119,12 @@ public class AlbumInfoPane implements Initializable {
                 else{
                     listRight.add(songDisplay);
                 }
-                songFilePaths.put(songDisplay, song.getFilepath());
+                songHashMap.put(songDisplay, song);
             }
-            //Play chosen song from tables
-            tableViewLeft.setRowFactory( tv -> {
-                TableRow<SongDisplay> row = new TableRow<>();
-                row.setOnMouseClicked(event -> {
-                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                        /*if (playSong != null){
-                            System.out.println("IS SONG BEING KILL?");
-                            //playSong.kill();
-                            //playSong.kill();
-                            *//*PCMProcessors pcmProcessors = new PCMProcessors();
-                            pcmProcessors.stop();*//*
-                        }*/
-                        //playSong = new PlaySong(songFilePaths.get(row.getItem()));
 
-                        //songLabel.setText(row.getItem().title);
+            setSongSelectionListener(tableViewLeft);
+            setSongSelectionListener(tableViewRight);
 
-                        playSong.setSong(songFilePaths.get(row.getItem()));
-                        playSong.start();
-                    }
-                });
-                return row ;
-            });
-            tableViewRight.setRowFactory( tv -> {
-                TableRow<SongDisplay> row = new TableRow<>();
-                row.setOnMouseClicked(event -> {
-                    if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                        /*if (playSong != null){
-                            System.out.println("IS SONG BEING KILL?");
-                            //playSong.kill();
-                            *//*PCMProcessors pcmProcessors = new PCMProcessors();
-                            pcmProcessors.stop();*//*
-                        }*/
-                        //playSong = new PlaySong(songFilePaths.get(row.getItem()));
-
-                        //songLabel.setText(row.getItem().title);
-
-                        playSong.setSong(songFilePaths.get(row.getItem()));
-                        playSong.start();
-                    }
-                });
-                return row ;
-            });
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CannotReadException e) {
@@ -174,5 +138,26 @@ public class AlbumInfoPane implements Initializable {
         }
 
     }//end setFlowPane() method
+
+    private void setSongSelectionListener(TableView<SongDisplay> tableView){
+        //Play chosen song from tables
+        tableView.setRowFactory( tv -> {
+            TableRow<SongDisplay> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+
+                    ArrayList<Song> list = new ArrayList<>();
+
+                    list.add(songHashMap.get(row.getItem()));
+                    playlist.addSongs(list);
+
+                    if (!playlist.isAlive()){
+                        playlist.start();
+                    }
+                }
+            });
+            return row ;
+        });
+    }
 
 }//end Controller Class

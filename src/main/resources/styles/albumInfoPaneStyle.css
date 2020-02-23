@@ -1,0 +1,25 @@
+.table-view {
+    -fx-table-cell-border-color: transparent;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 1;
+}
+.column-header-background {
+    visibility: hidden; -fx-padding: -1em;
+}
+.table-column {
+  -fx-alignment: CENTER;
+  -fx-text-fill: white;
+}
+.table-view *.increment-button,
+.table-view *.decrement-button,
+.table-view *.increment-arrow,
+.table-view *.decrement-arrow
+{
+    -fx-padding: 0;
+    -fx-shape: "";
+}
+.table-row-cell:selected {
+   -fx-background-color: #7a330d;
+   -fx-text-background-color:  #6622CC;
+   -fx-table-cell-border-color: #7a330d;
+}
