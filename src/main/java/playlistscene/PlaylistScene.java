@@ -71,7 +71,6 @@ public class PlaylistScene implements Initializable{
     public void addSongs(ArrayList<Song> songs){
 
         Platform.runLater(() -> {
-            playlistList.clear();
             for (Song song: songs){
                 AudioFile f = null;
                 try {

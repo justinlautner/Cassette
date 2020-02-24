@@ -23,7 +23,7 @@ import java.text.Collator;
 import java.util.*;
 
 public class AddFileDirectorys extends Thread {
-    
+
     private File chosenDirectory;
     private VBox vBox;
     private FlowPane flowPane;

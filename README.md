@@ -51,7 +51,7 @@ This project is licensed under Apache-2.0.
 ```
 A special thanks to the following, for making this possible...
     - jaudiotagger <com.github.goxr3plus>
-    - JustFlac fork by drogatkin <https://github.com/drogatkin/JustFLAC>
+    - vlcj <https://github.com/caprica/vlcj>
 Inspired by...
     - Clementine Media Player <https://github.com/clementine-player/Clementine>
     - MusicBee <https://getmusicbee.com>

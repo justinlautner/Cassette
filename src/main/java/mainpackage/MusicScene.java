@@ -57,6 +57,7 @@ public class MusicScene {
         this.progressBar = progressBar;
         this.scrollPane = scrollPane;
         this.playlist = playlist;
+        playlist.initializePlaylist();
 
         System.out.println("PROCESS BEGIN");
         try{
@@ -237,15 +238,14 @@ public class MusicScene {
                 //One mouse clicks makes a drop down of songs in that album, and two place the album in its entirety
                 //TODO: Change listener does not work with maximizing the window, fix this
                 //TODO: Tables are uneven by a factor of one when even number of songs
-                //TODO: Diversify classes better, less code on each class
+                //TODO: Diversify classes better, less code on each class and method
+                //TODO: Just after adding file directory, playlist.addSongs() returns null
                 button.setOnMouseClicked(mouseEvent -> {
                     if (mouseEvent.getClickCount() == 2){
 
                         playlist.addSongs(album.getAlbum());
 
-                        if (!playlist.isAlive()){
-                            playlist.start();
-                        }
+                        playlist.playMusic();
 
                     }
                     if (mouseEvent.getClickCount() == 1){

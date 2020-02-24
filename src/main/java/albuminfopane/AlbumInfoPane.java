@@ -151,9 +151,7 @@ public class AlbumInfoPane implements Initializable {
                     list.add(songHashMap.get(row.getItem()));
                     playlist.addSongs(list);
 
-                    if (!playlist.isAlive()){
-                        playlist.start();
-                    }
+                    playlist.playMusic();
                 }
             });
             return row ;

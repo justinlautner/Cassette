@@ -42,9 +42,11 @@ public class Controller implements Initializable {
     @FXML private Label songLabel, artistLabel, albumLabel;
     @FXML private ToggleButton toggleViewButton;
     @FXML private ImageView nowPlayingCover;
+    @FXML private Slider volumeSlider;
     private FlowPane flowPane;
     private PlaylistScene playlistScene;
     private Stage primaryStage;
+    private Playlist playlist;
 
     public Controller(){}
 
@@ -81,11 +83,13 @@ public class Controller implements Initializable {
     }
 
     public void loadMusic(){
+
+        playlist = new Playlist(Controller.this, playlistScene, primaryStage, volumeSlider, playButton);
         //If directory saved load library upon program start
         Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
         Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
         if (Files.exists(savedAlbums) & Files.exists(savedSongs)){
-            MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane, new Playlist(Controller.this, playlistScene, primaryStage));
+            MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane, playlist);
             musicScene.setMusicScene();
         }
     }
@@ -161,7 +165,7 @@ public class Controller implements Initializable {
         VBox aboutVbox = new VBox(20);
         Text fill = new Text();
         fill.setText("Author: Justin Lautner <jlautner@protonmail.com>" + '\n' + '\n' + "A special thanks to..." + '\n' + "jaudiotagger <com.github.goxr3plus>" + '\n' +
-                "JustFlac fork by drogatkin <https://github.com/drogatkin/JustFLAC>" + '\n' + '\n' +  "Inspiration from: " + '\n' +
+                "vlcj <https://github.com/caprica/vlcj>" + '\n' + '\n' +  "Inspiration from: " + '\n' +
                 "Clementine Media Player <https://github.com/clementine-player/Clementine>" + '\n' + "MusicBee <https://getmusicbee.com>");
         fill.setFill(Paint.valueOf("#FFFFFF"));
         fill.setStyle("-fx-font-size: 16px;");
@@ -171,6 +175,26 @@ public class Controller implements Initializable {
         about.setScene(aboutScene);
         about.show();
 
+    }
+
+    @FXML
+    private void pressPreviousTrack(){
+        playlist.previousTrack();
+    }
+
+    @FXML
+    private void pressPlay(){
+        playlist.pauseMusic();
+    }
+
+    @FXML
+    private void pressStop(){
+        playlist.stopMusic();
+    }
+
+    @FXML
+    private void pressNextTrack(){
+        playlist.nextTrack();
     }
 
 }
