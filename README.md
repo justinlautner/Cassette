@@ -1,4 +1,4 @@
-# Cassette Music Player ![Version](https://img.shields.io/badge/Version-v0.5--pre--alpha-red "pre-alpha")
+# Cassette Music Player ![Version](https://img.shields.io/badge/Version-v0.7--pre--alpha-red "pre-alpha")
 
 Do you ever feel like the slog heap of available music players are all missing a few features that the other one has? Sick of having to pick and choose between features and programs? This is my attempt at combining them all into one. For the betterment of the human race, of course.
 
