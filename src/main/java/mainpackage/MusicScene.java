@@ -175,16 +175,6 @@ public class MusicScene {
         Accordion accordion = new Accordion();
         accordion.getStyleClass().add("genreMenuStyle.css");
         for (Album album : albumLinkedList){
-            /*ToggleButton toggleButton = new ToggleButton();
-            Image check = new Image("images/check.png", 10, 10, true, true);
-            Image unCheck = new Image("images/uncheck.png", 10, 10, true, true);
-            ImageView imageView = new ImageView();
-            imageView.imageProperty().bind(Bindings.when(toggleButton.selectedProperty()).then(check).otherwise(unCheck));
-            toggleButton.setGraphic(imageView);
-            toggleButton.setText(s);
-            toggleButton.getStyleClass().add("generalStyle.css");
-            toggleButton.setAlignment(Pos.CENTER);
-            vBox.getChildren().add(toggleButton);*/
 
             if (!genres.contains(album.getSong(0).getGenre())){
                 genres.add(album.getSong(0).getGenre());

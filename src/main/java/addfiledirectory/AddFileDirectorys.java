@@ -3,7 +3,6 @@ package addfiledirectory;
 import mainpackage.MusicScene;
 import music.Album;
 import music.Song;
-import musicplayer.PlaySong;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -24,7 +23,7 @@ import java.text.Collator;
 import java.util.*;
 
 public class AddFileDirectorys extends Thread {
-
+    
     private File chosenDirectory;
     private VBox vBox;
     private FlowPane flowPane;
@@ -111,7 +110,7 @@ public class AddFileDirectorys extends Thread {
             albumsOutputStream.close();
 
 
-            } catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -214,11 +213,11 @@ public class AddFileDirectorys extends Thread {
                     albumLinkedList.add(new Album(singleAlbum));
                     singleAlbum.clear();
                     System.out.println("is this thing on?");
+                }
             }
-        }
 
-        singleAlbum.add(songLinkedList.get(i));
-    }//end for loop
+            singleAlbum.add(songLinkedList.get(i));
+        }//end for loop
         albumLinkedList.add(new Album(singleAlbum));
     }
 
