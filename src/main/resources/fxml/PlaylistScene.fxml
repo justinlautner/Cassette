@@ -16,6 +16,7 @@
                 <TableColumn fx:id="albumColumn" prefWidth="75.0" text="Album" />
                 <TableColumn fx:id="lengthColumn" prefWidth="75.0" text="Length" />
                 <TableColumn fx:id="yearColumn" prefWidth="75.0" text="Year" />
+            <TableColumn fx:id="bitRateColumn" prefWidth="75.0" text="Bit Rate" />
                 <TableColumn fx:id="fileTypeColumn" prefWidth="75.0" text="File Type" />
             </columns>
             <columnResizePolicy>

@@ -39,6 +39,7 @@ public class PlaylistScene implements Initializable{
     @FXML private TableColumn<PlaylistSongDisplay, String> lengthColumn;
     @FXML private TableColumn<PlaylistSongDisplay, String> yearColumn;
     @FXML private TableColumn<PlaylistSongDisplay, String> fileTypeColumn;
+    @FXML private TableColumn<PlaylistSongDisplay, String> bitRateColumn;
     private ObservableList<PlaylistSongDisplay> playlistList = FXCollections.observableArrayList();
     private HashMap<PlaylistSongDisplay, String> songFilePaths = new HashMap<>();
 
@@ -52,6 +53,7 @@ public class PlaylistScene implements Initializable{
         albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
         lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+        bitRateColumn.setCellValueFactory(new PropertyValueFactory<>("bitRate"));
         fileTypeColumn.setCellValueFactory(new PropertyValueFactory<>("fileType"));
 
         tableView.setItems(playlistList);
@@ -95,7 +97,9 @@ public class PlaylistScene implements Initializable{
                 if (temp.length() < 3){
                     realTrackLength = realTrackLength.substring(0, realTrackLength.length() - 1) + "0" + realTrackLength.substring(realTrackLength.length() - 1);
                 }
-                PlaylistSongDisplay display = new PlaylistSongDisplay(song.getTrack(), song.getTitle(), song.getArtist(), song.getAlbumArtist(), song.getAlbum(), realTrackLength, song.getYear(), format);
+                String bitRate = f.getAudioHeader().getBitRate() + " kbps";
+
+                PlaylistSongDisplay display = new PlaylistSongDisplay(song.getTrack(), song.getTitle(), song.getArtist(), song.getAlbumArtist(), song.getAlbum(), realTrackLength, song.getYear(), bitRate, format);
                 playlistList.add(display);
                 songFilePaths.put(display, song.getFilepath());
             }

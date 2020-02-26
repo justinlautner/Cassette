@@ -2,10 +2,10 @@ package playlistscene;
 
 public class PlaylistSongDisplay {
 
-    private String title, length, artist, albumArtist, album, year, fileType;
+    private String title, length, artist, albumArtist, album, year, bitRate, fileType;
     private int track;
 
-    public PlaylistSongDisplay(int track, String title, String artist, String albumArtist, String album, String length, String year, String fileType){
+    public PlaylistSongDisplay(int track, String title, String artist, String albumArtist, String album, String length, String year,String bitRate, String fileType){
 
         this.track = track;
         this.title = title;
@@ -14,6 +14,7 @@ public class PlaylistSongDisplay {
         this.albumArtist = albumArtist;
         this.album = album;
         this.year = year;
+        this.bitRate = bitRate;
         this.fileType = fileType;
 
     }
@@ -82,4 +83,11 @@ public class PlaylistSongDisplay {
         this.album = album;
     }
 
+    public void setBitRate(String bitRate) {
+        this.bitRate = bitRate;
+    }
+
+    public String getBitRate() {
+        return bitRate;
+    }
 }
