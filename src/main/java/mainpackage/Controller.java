@@ -85,6 +85,8 @@ public class Controller implements Initializable {
     public void loadMusic(){
 
         playlist = new Playlist(Controller.this, playlistScene, primaryStage, volumeSlider, playButton);
+
+        playlistScene.setPlaylist(playlist);
         //If directory saved load library upon program start
         Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
         Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");

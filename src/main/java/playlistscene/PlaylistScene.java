@@ -5,12 +5,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import music.Song;
+import musicplayer.Playlist;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -18,10 +19,7 @@ import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.TagException;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +39,12 @@ public class PlaylistScene implements Initializable{
     @FXML private TableColumn<PlaylistSongDisplay, String> fileTypeColumn;
     @FXML private TableColumn<PlaylistSongDisplay, String> bitRateColumn;
     private ObservableList<PlaylistSongDisplay> playlistList = FXCollections.observableArrayList();
-    private HashMap<PlaylistSongDisplay, String> songFilePaths = new HashMap<>();
+    private HashMap<PlaylistSongDisplay, Song> songHashMap = new HashMap<>();
+    private HashMap<Song, PlaylistSongDisplay> songHashMapRev = new HashMap<>();
+    private Playlist playlist;
+    private ContextMenu playlistContextMenu = new ContextMenu();
+    private MenuItem removeSelected = new MenuItem();
+    private MenuItem clearPlaylist = new MenuItem();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -57,15 +60,41 @@ public class PlaylistScene implements Initializable{
         fileTypeColumn.setCellValueFactory(new PropertyValueFactory<>("fileType"));
 
         tableView.setItems(playlistList);
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+
+        removeSelected.setText("Remove Selected");
+        clearPlaylist.setText("Clear Playlist");
+        playlistContextMenu.getItems().addAll(removeSelected, clearPlaylist);
+
     }
 
-    public PlaylistScene(){ }
+    public void setPlaylist(Playlist playlist){
+        this.playlist = playlist;
+    }
+
+    public PlaylistScene(){
+
+    }
+
+    public ArrayList<Song> getCurrentPlaylist(){
+        ArrayList<Song> currentPlaylist = new ArrayList<>();
+        for (PlaylistSongDisplay psd: playlistList){
+            currentPlaylist.add(songHashMap.get(psd));
+        }
+        return currentPlaylist;
+    }
 
     public void setAlbumImage(byte[] contents) {
 
         Platform.runLater(() -> {
-            BackgroundImage backgroundImage = new BackgroundImage(new Image(new BufferedInputStream(new ByteArrayInputStream(contents))), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, false, false));
-            anchorPane.setBackground(new Background(backgroundImage));
+            if (contents != null){
+                BackgroundImage backgroundImage = new BackgroundImage(new Image(new BufferedInputStream(new ByteArrayInputStream(contents))), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, false, false));
+                anchorPane.setBackground(new Background(backgroundImage));
+            }
+            else{
+                anchorPane.setBackground(null);
+            }
         });
 
     }
@@ -101,37 +130,60 @@ public class PlaylistScene implements Initializable{
 
                 PlaylistSongDisplay display = new PlaylistSongDisplay(song.getTrack(), song.getTitle(), song.getArtist(), song.getAlbumArtist(), song.getAlbum(), realTrackLength, song.getYear(), bitRate, format);
                 playlistList.add(display);
-                songFilePaths.put(display, song.getFilepath());
+                songHashMap.put(display, song);
+                songHashMapRev.put(song, display);
             }
         });
+        createRowFactory();
 
-        //This will be used later
-        /*tableView.setRowFactory( tv -> {
+    }// end addSongs method
+
+    private void createRowFactory(){
+        //Play selected song from playlist, to skip forward or back
+        tableView.setRowFactory( tv -> {
             TableRow<PlaylistSongDisplay> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
+                //On double click of song, play it
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                        *//*if (playSong != null){
-                            System.out.println("IS SONG BEING KILL?");
-                            //playSong.kill();
-                            //playSong.kill();
-                            *//**//*PCMProcessors pcmProcessors = new PCMProcessors();
-                            pcmProcessors.stop();*//**//*
-                        }*//*
-                    //playSong = new PlaySong(songFilePaths.get(row.getItem()));
+                    playlist.playPlaylistSelection(songHashMap.get(row.getItem()));
+                }
+                //On right click open context menu
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    ObservableList<PlaylistSongDisplay> selectedItems = tableView.getSelectionModel().getSelectedItems();
 
-                    //songLabel.setText(row.getItem().title);
-
-                    playlist.addSongs(new ArrayList<>(row.get));
-                    //Platform.runLater(playlist);
-
-                    if (!playlist.isAlive()){
-                        playlist.start();
+                    ArrayList<Song> selectedIDs = new ArrayList<>();
+                    for (PlaylistSongDisplay rowSelected : selectedItems) {
+                        selectedIDs.add(songHashMap.get(rowSelected));
                     }
+                    //Allow for removal of selected songs from playlist
+                    removeSelected.setOnAction((actionEvent -> {
+                        playlist.removePlaylistSelection(selectedIDs);
+                        for (Song s: selectedIDs){
+                            playlistList.remove(songHashMapRev.get(s));
+                        }
+                    }));
+                    //Allow for clearing entire playlist
+                    clearPlaylist.setOnAction(actionEvent -> {
+                        playlist.clearPlaylist();
+                        emptyTable();
+                    });
+                    //Show context menu at location of click
+                    playlistContextMenu.show(row, event.getScreenX(), event.getScreenY());
+                }
+                //Undo selection if user clicks away from focused row
+                if (event.getButton() == MouseButton.PRIMARY && (row.isEmpty())){
+                    tableView.getSelectionModel().clearSelection();
                 }
             });
             return row;
-        });*/
+        });
+        //TODO: Add drag listener to move songs around as desired
+    }
 
-    }// end addSongs method
+    private void emptyTable(){
+        Platform.runLater(() -> {
+            playlistList.clear();
+        });
+    }
 
 }

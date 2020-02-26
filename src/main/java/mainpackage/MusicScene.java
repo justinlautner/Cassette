@@ -8,6 +8,7 @@ import javafx.scene.CacheHint;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -241,14 +242,14 @@ public class MusicScene {
                 //TODO: Diversify classes better, less code on each class and method
                 //TODO: Just after adding file directory, playlist.addSongs() returns null
                 button.setOnMouseClicked(mouseEvent -> {
-                    if (mouseEvent.getClickCount() == 2){
+                    if (mouseEvent.getClickCount() == 2 && mouseEvent.getButton() == MouseButton.PRIMARY){
 
                         playlist.addSongs(album.getAlbum());
 
-                        playlist.playMusic();
+                        playlist.playPlaylistSelection(album.getSong(0));
 
                     }
-                    if (mouseEvent.getClickCount() == 1){
+                    if (mouseEvent.getClickCount() == 1 && mouseEvent.getButton() == MouseButton.PRIMARY){
                         if (lastButtonChosen == buttonLocation.get(button) && albumIsOpen){
 
                             //If the same album is chosen a second time, close it
@@ -317,6 +318,10 @@ public class MusicScene {
                             }
 
                         }
+                    }
+
+                    if (mouseEvent.getButton() == MouseButton.SECONDARY){
+                        getContextMenu();
                     }
 
                 });//end setOnMouseClicked() listener
