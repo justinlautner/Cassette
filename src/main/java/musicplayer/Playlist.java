@@ -15,6 +15,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 import playlistscene.PlaylistScene;
@@ -139,9 +140,15 @@ public class Playlist {
             AudioFile f;
             f = AudioFileIO.read(file);
             Tag tag = f.getTag();
-            byte[] contents = tag.getFirstArtwork().getBinaryData();
-            playlistScene.setAlbumImage(contents);
-            controller.setNowPlaying(playlist.get(playlistCounter).getTitle(), playlist.get(playlistCounter).getArtist(), playlist.get(playlistCounter).getAlbum(), new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true));
+            byte[] contents;
+            if (tag.hasField(FieldKey.COVER_ART)){
+                contents = tag.getFirstArtwork().getBinaryData();
+                playlistScene.setAlbumImage(contents);
+                controller.setNowPlaying(playlist.get(playlistCounter).getTitle(), playlist.get(playlistCounter).getArtist(), playlist.get(playlistCounter).getAlbum(), new Image(new BufferedInputStream(new ByteArrayInputStream(contents)), 150, 150, true, true));
+            }
+            else {
+                controller.setNowPlaying(playlist.get(playlistCounter).getTitle(), playlist.get(playlistCounter).getArtist(), playlist.get(playlistCounter).getAlbum(),new Image("/images/empty.jpeg"));
+            }
         } catch (CannotReadException e) {
             e.printStackTrace();
         } catch (IOException e) {
