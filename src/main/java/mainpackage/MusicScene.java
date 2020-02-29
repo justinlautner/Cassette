@@ -74,9 +74,7 @@ public class MusicScene {
                     FileInputStream albumsIn = new FileInputStream(savedAlbums.toString());
                     ObjectInputStream albumObjIn = new ObjectInputStream(albumsIn);
                     try{
-                        while (true){
-                            albumLinkedList.add((Album) albumObjIn.readObject());
-                        }
+                        albumLinkedList = (LinkedList<Album>) albumObjIn.readObject();
                     } catch (EOFException ignored){
 
                     } catch (ClassNotFoundException e) {
@@ -89,9 +87,7 @@ public class MusicScene {
                     FileInputStream songsIn = new FileInputStream(savedSongs.toString());
                     ObjectInputStream songObjIn = new ObjectInputStream(songsIn);
                     try{
-                        while (true){
-                            songLinkedList.add((Song) songObjIn.readObject());
-                        }
+                        songLinkedList = (LinkedList<Song>) songObjIn.readObject();
                     } catch (EOFException ignored){
 
                     } catch (ClassNotFoundException e) {
@@ -133,9 +129,7 @@ public class MusicScene {
                     FileInputStream albumsIn = new FileInputStream(savedAlbums.toString());
                     ObjectInputStream albumObjIn = new ObjectInputStream(albumsIn);
                     try{
-                        while (true){
-                            albumLinkedList.add((Album) albumObjIn.readObject());
-                        }
+                        albumLinkedList = (LinkedList<Album>) albumObjIn.readObject();
                     } catch (EOFException ignored){
 
                     } catch (ClassNotFoundException e) {
@@ -148,9 +142,7 @@ public class MusicScene {
                     FileInputStream songsIn = new FileInputStream(savedSongs.toString());
                     ObjectInputStream songObjIn = new ObjectInputStream(songsIn);
                     try{
-                        while (true){
-                            songLinkedList.add((Song) songObjIn.readObject());
-                        }
+                        songLinkedList = (LinkedList<Song>) songObjIn.readObject();
                     } catch (EOFException ignored){
 
                     } catch (ClassNotFoundException e) {

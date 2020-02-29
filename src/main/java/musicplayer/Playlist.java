@@ -74,6 +74,8 @@ public class Playlist {
                     System.out.print(s.getFilepath());
                 }
                 addSongs(loadedPlaylist);
+                fileInputStream.close();
+                objectInputStream.close();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
