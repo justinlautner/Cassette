@@ -106,11 +106,20 @@ public class Controller implements Initializable {
         //Open directory chooser to add files
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Choose a Directory to add");
-        File defaultDirectory = new File(System.getProperty("user.home"));
-        chooser.setInitialDirectory(defaultDirectory);
-        File chosenFolder = chooser.showDialog(anchorPane.getScene().getWindow());
 
-        //If user chose a folder, commence search for music
+        File defaultDirectory;
+        if (Files.exists(Paths.get("~/Music"))){
+            defaultDirectory = new File("~/Music");
+        }
+        else{
+            defaultDirectory = new File(System.getProperty("user.home"));
+        }
+
+        chooser.setInitialDirectory(defaultDirectory);
+
+        File chosenFolder = chooser.showDialog(primaryStage);
+
+        //If user chose a folder, commence music search
         if (chosenFolder != null){
             AddFileDirectorys addFileDirectorys = new AddFileDirectorys(chosenFolder, vBox, flowPane, progressBar, scrollPane);
             addFileDirectorys.start();
@@ -166,7 +175,7 @@ public class Controller implements Initializable {
         about.setTitle("About Cassette...");
         VBox aboutVbox = new VBox(20);
         Text fill = new Text();
-        fill.setText("Author: Justin Lautner <jlautner@protonmail.com>" + '\n' + '\n' + "A special thanks to..." + '\n' + "jaudiotagger <com.github.goxr3plus>" + '\n' +
+        fill.setText("Author: Justin Lautner <jlautner@protonmail.com>" + '\n' + '\n' + "A special thanks to:" + '\n' + "jaudiotagger <com.github.goxr3plus>" + '\n' +
                 "vlcj <https://github.com/caprica/vlcj>" + '\n' + '\n' +  "Inspiration from: " + '\n' +
                 "Clementine Media Player <https://github.com/clementine-player/Clementine>" + '\n' + "MusicBee <https://getmusicbee.com>");
         fill.setFill(Paint.valueOf("#FFFFFF"));
