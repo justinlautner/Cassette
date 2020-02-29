@@ -64,9 +64,6 @@ public class AddFileDirectorys extends Thread {
                     out.flush();
                     out.close();
                 }
-                else{
-                    return;
-                }
             }
             else{
                 System.out.println("ELSE HAS BEEN TRIGGERED");
@@ -79,36 +76,42 @@ public class AddFileDirectorys extends Thread {
 
             Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
             Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
-            List<String> listOfDirectories = Files.readAllLines(pathToDirectories);
-            System.out.println("NO ALBUM OR SONG SAVE FILE FOUND");
-            for (String string: listOfDirectories){
-                getMusic(new File(string));
-            }
-            setMusic();
+            if (!Files.exists(savedAlbums) && !Files.exists(savedSongs)){
+                List<String> listOfDirectories = Files.readAllLines(pathToDirectories);
+                System.out.println("NO ALBUM OR SONG SAVE FILE FOUND");
+                for (String string: listOfDirectories){
+                    getMusic(new File(string));
+                }
+                setMusic();
 
-            File albumsFile = new File(savedAlbums.toString());
-            File songsFile = new File(savedSongs.toString());
-            FileOutputStream songsOutputStream = new FileOutputStream(songsFile);
-            FileOutputStream albumsOutputStream = new FileOutputStream(albumsFile);
-            ObjectOutputStream albumsOut = new ObjectOutputStream(albumsOutputStream);
-            ObjectOutputStream songsOut = new ObjectOutputStream(songsOutputStream);
+                File albumsFile = new File(savedAlbums.toString());
+                File songsFile = new File(savedSongs.toString());
+                FileOutputStream songsOutputStream = new FileOutputStream(songsFile);
+                FileOutputStream albumsOutputStream = new FileOutputStream(albumsFile);
+                ObjectOutputStream albumsOut = new ObjectOutputStream(albumsOutputStream);
+                ObjectOutputStream songsOut = new ObjectOutputStream(songsOutputStream);
 
-            for (Song song: songLinkedList){
+            /*for (Song song: songLinkedList){
                 songsOut.writeObject(song);
             }
             for (Album album: albumLinkedList){
                 albumsOut.writeObject(album);
+            }*/
+                songsOut.writeObject(songLinkedList);
+                albumsOut.writeObject(albumLinkedList);
+
+                albumsOut.flush();
+                songsOut.flush();
+                albumsOut.close();
+                songsOut.close();
+                songsOutputStream.flush();
+                songsOutputStream.close();
+                albumsOutputStream.flush();
+                albumsOutputStream.close();
             }
-
-            albumsOut.flush();
-            songsOut.flush();
-            albumsOut.close();
-            songsOut.close();
-            songsOutputStream.flush();
-            songsOutputStream.close();
-            albumsOutputStream.flush();
-            albumsOutputStream.close();
-
+            else{
+                return;
+            }
 
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();
