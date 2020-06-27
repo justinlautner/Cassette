@@ -39,10 +39,12 @@ public class Controller implements Initializable {
     private ScrollPane scrollPane;
     @FXML private ProgressBar progressBar;
     @FXML private Button playButton, previousTrackButton, nextTrackButton, stopButton;
-    @FXML private Label songLabel, artistLabel, albumLabel;
+    @FXML private Label songLabel, artistLabel, albumLabel, startSeekLabel, endSeekLabel;
     @FXML private ToggleButton toggleViewButton;
     @FXML private ImageView nowPlayingCover;
     @FXML private Slider volumeSlider;
+    @FXML private Slider seekSlider;
+    @FXML private ImageView loadingAnimation;
     private FlowPane flowPane;
     private PlaylistScene playlistScene;
     private Stage primaryStage;
@@ -84,16 +86,44 @@ public class Controller implements Initializable {
 
     public void loadMusic(){
 
-        playlist = new Playlist(Controller.this, playlistScene, primaryStage, volumeSlider, playButton);
+        playlist = new Playlist(Controller.this, playlistScene, primaryStage, volumeSlider, playButton, seekSlider, startSeekLabel, endSeekLabel);
 
         playlistScene.setPlaylist(playlist);
+
         //If directory saved load library upon program start
         Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
         Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
         if (Files.exists(savedAlbums) & Files.exists(savedSongs)){
+            //isMusicLoaded = true;
             MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane, playlist);
             musicScene.setMusicScene();
         }
+        /* Due to a bug in Java's codebase, if playlist is instantiated in initialize method or before adding songs,
+        *  directorychooser will fail to open, with the message
+        *  #
+           # A fatal error has been detected by the Java Runtime Environment:
+           #
+           #  SIGSEGV (0xb) at pc=0x00007f2b078a7fa0, pid=7240, tid=7318
+           #
+           # JRE version: OpenJDK Runtime Environment (11.0.6+10) (build 11.0.6+10-post-Ubuntu-1ubuntu118.04.1)
+           # Java VM: OpenJDK 64-Bit Server VM (11.0.6+10-post-Ubuntu-1ubuntu118.04.1, mixed mode, sharing, tiered, compressed oops, g1 gc, linux-amd64)
+           # Problematic frame:
+           # C  [libpthread.so.0+0x9fa0]  pthread_mutex_lock+0x0
+           #
+           # Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport %p %s %c %d %P" (or dumping to /mnt/Entertainment/Libraries/Coding-Projects/IntelliJ/Cassette/core.7240)
+           #
+           # If you would like to submit a bug report, please visit:
+           #   https://bugs.launchpad.net/ubuntu/+source/openjdk-lts
+           # The crash happened outside the Java Virtual Machine in native code.
+           # See problematic frame for where to report the bug.
+           #
+        *  thus, i have tested to see if music has been loaded first, and placed it after directory added if not.
+        * */
+        /*if (isMusicLoaded){
+            playlist = new Playlist(Controller.this, playlistScene, primaryStage, volumeSlider, playButton, seekSlider, startSeekLabel, endSeekLabel);
+
+            playlistScene.setPlaylist(playlist);
+        }*/
     }
 
     public void setStage(Stage primaryStage){
@@ -208,4 +238,9 @@ public class Controller implements Initializable {
         playlist.nextTrack();
     }
 
+    @FXML
+    private void userSeek(){
+        float pos = (float) seekSlider.getValue();
+        playlist.seek(pos);
+    }
 }

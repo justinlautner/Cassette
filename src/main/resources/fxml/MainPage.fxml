@@ -71,6 +71,13 @@
                                 </VBox>
                             </children>
                         </HBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="startSeekLabel" text="0:00" />
+                        <Slider fx:id="seekSlider" onMouseDragged="#userSeek" onMouseReleased="#userSeek" prefWidth="500.0" />
+                        <Label fx:id="endSeekLabel" text="0:00" />
+                     </children>
+                  </HBox>
                     </children>
                 </HBox>
             </bottom>

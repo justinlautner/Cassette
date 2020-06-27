@@ -3,6 +3,7 @@ package musicplayer;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,11 +19,16 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.jnativehook.keyboard.NativeKeyAdapter;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 import playlistscene.PlaylistScene;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
 import uk.co.caprica.vlcj.media.MediaRef;
+import uk.co.caprica.vlcj.media.TrackType;
 import uk.co.caprica.vlcj.medialist.MediaListRef;
 import uk.co.caprica.vlcj.player.base.MediaPlayer;
+import uk.co.caprica.vlcj.player.base.MediaPlayerEventListener;
 import uk.co.caprica.vlcj.player.list.MediaListPlayer;
 import uk.co.caprica.vlcj.player.list.MediaListPlayerEventListener;
 import uk.co.caprica.vlcj.player.list.PlaybackMode;
@@ -38,6 +44,8 @@ public class Playlist {
     private PlaylistScene playlistScene;
     private Stage primaryStage;
     private Slider volumeSlider;
+    private Slider seekSlider;
+    private Label startSeekLabel, endSeekLabel;
     private Button playButton;
     private MediaPlayer mediaPlayer;
     private MediaListRef mediaList;
@@ -46,22 +54,20 @@ public class Playlist {
     private int playlistCounter = -1;
 
     //All passed variables are from Application thread, this way they can be updated based on the song playing in this one
-    public Playlist(Controller controller, PlaylistScene playlistScene, Stage primaryStage, Slider volumeSlider, Button playButton){
+    public Playlist(Controller controller, PlaylistScene playlistScene, Stage primaryStage, Slider volumeSlider, Button playButton, Slider seekSlider, Label startSeekLabel, Label endSeekLabel){
         this.controller = controller;
         this.playlistScene = playlistScene;
         this.primaryStage = primaryStage;
         this.volumeSlider = volumeSlider;
         this.playButton = playButton;
-
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                saveSettings();
-            }
-        });
+        this.seekSlider = seekSlider;
+        this.startSeekLabel = startSeekLabel;
+        this.endSeekLabel = endSeekLabel;
 
     }
 
     private void loadPlaylist(){
+        primaryStage.setOnCloseRequest(we -> saveSettings());
         File file = new File("src/main/resources/saves/settingsCache/playlist.txt");
         try {
 
@@ -151,6 +157,7 @@ public class Playlist {
             else {
                 controller.setNowPlaying(playlist.get(playlistCounter).getTitle(), playlist.get(playlistCounter).getArtist(), playlist.get(playlistCounter).getAlbum(),new Image("/images/empty.jpeg"));
             }
+            setSeekSlider(f);
         } catch (CannotReadException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -167,6 +174,186 @@ public class Playlist {
         Platform.runLater(() -> {
             primaryStage.setTitle(playlist.get(playlistCounter).getArtist() + " - " + playlist.get(playlistCounter).getTitle());
         });
+    }
+
+    public void seek(float seekPos){
+        /*System.out.println(number);
+        float num = Float.parseFloat(number.toString());*/
+        float newSeekPos = (float) (seekPos * .01);
+        long songPos = (long) (mediaListPlayer.mediaPlayer().mediaPlayer().status().length() * newSeekPos);
+        mediaListPlayer.mediaPlayer().mediaPlayer().controls().setTime(songPos);
+    }
+
+    private void setSeekSlider(AudioFile f){
+
+        Platform.runLater(() -> {
+            String realTrackLength = f.getAudioHeader().getTrackLength() / 60 + ":" + f.getAudioHeader().getTrackLength() % 60;
+
+            //In instances where track length returns a single digit in seconds, add the 0 in front. e.g. 4:08 instead of 4:8
+            String temp = realTrackLength.substring(realTrackLength.indexOf(":"));
+            if (temp.length() < 3){
+                realTrackLength = realTrackLength.substring(0, realTrackLength.length() - 1) + "0" + realTrackLength.substring(realTrackLength.length() - 1);
+            }
+            endSeekLabel.setText(realTrackLength);
+
+            mediaListPlayer.mediaPlayer().mediaPlayer().events().addMediaPlayerEventListener(new MediaPlayerEventListener() {
+                @Override
+                public void mediaChanged(MediaPlayer mediaPlayer, MediaRef mediaRef) {
+
+                }
+
+                @Override
+                public void opening(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void buffering(MediaPlayer mediaPlayer, float v) {
+
+                }
+
+                @Override
+                public void playing(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void paused(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void stopped(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void forward(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void backward(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void finished(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void timeChanged(MediaPlayer mediaPlayer, long l) {
+                    Platform.runLater(() -> {
+                        int conversion = (int) (l * .001);
+                        int seconds = conversion % 60;
+                        int minutes = conversion / 60;
+                        String time = minutes + ":" + seconds;
+
+                        if (seconds < 10){
+                            time = minutes + ":0" + seconds;
+                        }
+
+                        startSeekLabel.setText(time);
+
+                        double pos = 100 * ((double) l / (double) mediaListPlayer.mediaPlayer().mediaPlayer().status().length());
+                        seekSlider.adjustValue(pos);
+                    });
+                }
+
+                @Override
+                public void positionChanged(MediaPlayer mediaPlayer, float v) {
+
+                }
+
+                @Override
+                public void seekableChanged(MediaPlayer mediaPlayer, int i) {
+
+                }
+
+                @Override
+                public void pausableChanged(MediaPlayer mediaPlayer, int i) {
+
+                }
+
+                @Override
+                public void titleChanged(MediaPlayer mediaPlayer, int i) {
+
+                }
+
+                @Override
+                public void snapshotTaken(MediaPlayer mediaPlayer, String s) {
+
+                }
+
+                @Override
+                public void lengthChanged(MediaPlayer mediaPlayer, long l) {
+
+                }
+
+                @Override
+                public void videoOutput(MediaPlayer mediaPlayer, int i) {
+
+                }
+
+                @Override
+                public void scrambledChanged(MediaPlayer mediaPlayer, int i) {
+
+                }
+
+                @Override
+                public void elementaryStreamAdded(MediaPlayer mediaPlayer, TrackType trackType, int i) {
+
+                }
+
+                @Override
+                public void elementaryStreamDeleted(MediaPlayer mediaPlayer, TrackType trackType, int i) {
+
+                }
+
+                @Override
+                public void elementaryStreamSelected(MediaPlayer mediaPlayer, TrackType trackType, int i) {
+
+                }
+
+                @Override
+                public void corked(MediaPlayer mediaPlayer, boolean b) {
+
+                }
+
+                @Override
+                public void muted(MediaPlayer mediaPlayer, boolean b) {
+
+                }
+
+                @Override
+                public void volumeChanged(MediaPlayer mediaPlayer, float v) {
+
+                }
+
+                @Override
+                public void audioDeviceChanged(MediaPlayer mediaPlayer, String s) {
+
+                }
+
+                @Override
+                public void chapterChanged(MediaPlayer mediaPlayer, int i) {
+
+                }
+
+                @Override
+                public void error(MediaPlayer mediaPlayer) {
+
+                }
+
+                @Override
+                public void mediaPlayerReady(MediaPlayer mediaPlayer) {
+
+                }
+            });
+
+        });
+
     }
 
     private void emptyNowPlaying(){
@@ -192,6 +379,7 @@ public class Playlist {
                 FileInputStream fileInputStream = new FileInputStream(file);
                 int vol = fileInputStream.read();
                 volumeSlider.valueProperty().set(vol);
+                fileInputStream.close();
             }
             else{
                 volumeSlider.valueProperty().set(100);
@@ -281,7 +469,7 @@ public class Playlist {
         emptyNowPlaying();
     }
 
-    private void saveSettings(){
+    public void saveSettings(){
         try {
 
             //Save volume setting
@@ -289,6 +477,7 @@ public class Playlist {
             Files.deleteIfExists(file.toPath());
             FileOutputStream fileOutputStream= new FileOutputStream(file, false);
             fileOutputStream.write((int) volumeSlider.getValue());
+            fileOutputStream.flush();
 
             //Save playlist
             file = new File("src/main/resources/saves/settingsCache/playlist.txt");
@@ -300,6 +489,10 @@ public class Playlist {
             for (Song s: playlistScene.getCurrentPlaylist()){
                 System.out.print(s.getFilepath());
             }
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            objectOutputStream.flush();
+            objectOutputStream.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
