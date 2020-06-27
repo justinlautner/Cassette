@@ -10,9 +10,9 @@
       <sourceFolder url="file://$MODULE_DIR$/lib" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="11" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="OpenJFX" level="project" />
+    <orderEntry type="library" exported="" name="OPENJFX" level="project" />
     <orderEntry type="library" name="Maven: com.github.goxr3plus:jaudiotagger:2.2.7" level="project" />
     <orderEntry type="library" name="Maven: uk.co.caprica:vlcj:4.2.0" level="project" />
     <orderEntry type="library" name="Maven: uk.co.caprica:vlcj-natives:4.1.0" level="project" />

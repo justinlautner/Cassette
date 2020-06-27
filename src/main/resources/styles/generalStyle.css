@@ -1,4 +1,4 @@
-.root, AnchorPane, BorderPane, SplitPane, .scroll-pane, TilePane, .scroll-pane > .corner, FlowPane
+.root, AnchorPane, BorderPane, SplitPane, .scroll-pane, TilePane, .scroll-pane > .corner, FlowPane, .scroll-pane .viewport
 {
     -fx-background-color: #454545;
 }

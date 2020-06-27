@@ -89,7 +89,7 @@ public class PlaylistScene implements Initializable{
 
         Platform.runLater(() -> {
             if (contents != null){
-                BackgroundImage backgroundImage = new BackgroundImage(new Image(new BufferedInputStream(new ByteArrayInputStream(contents))), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, false, false));
+                BackgroundImage backgroundImage = new BackgroundImage(new Image(new BufferedInputStream(new ByteArrayInputStream(contents))), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1, 1, true, true, false, true));
                 anchorPane.setBackground(new Background(backgroundImage));
             }
             else{

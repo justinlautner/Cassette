@@ -91,12 +91,6 @@ public class AddFileDirectorys extends Thread {
                 ObjectOutputStream albumsOut = new ObjectOutputStream(albumsOutputStream);
                 ObjectOutputStream songsOut = new ObjectOutputStream(songsOutputStream);
 
-            /*for (Song song: songLinkedList){
-                songsOut.writeObject(song);
-            }
-            for (Album album: albumLinkedList){
-                albumsOut.writeObject(album);
-            }*/
                 songsOut.writeObject(songLinkedList);
                 albumsOut.writeObject(albumLinkedList);
 
