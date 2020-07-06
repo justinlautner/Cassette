@@ -32,7 +32,7 @@ In the meantime, i am very much open to suggestions, comments or pull requests.
 ##### Version
 ```
 The current version is a loose reflection of the state of the program. 
-Formal release is scheduled for late May of this year, and will then be a more
+Formal release is scheduled for later this year, and will then be a more
 accurate representation of updates.
 ```
 ### Considerations
