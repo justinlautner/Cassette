@@ -23,6 +23,14 @@ Do you ever feel like the slog heap of available music players are all missing a
 
 ![Playlist View](screenshots/Cassette_Playlist_View.png "Making additions to that small taste")
 ### Getting Started
+##### Prerequisites
+```
+An installation of VLC is required to use this program.
+Ensure that the version you have is in accordance with your architecture(64 bit OS = 64 bit VLC).
+VLC can be installed here: https://www.videolan.org/vlc/
+This is currently required by the JNA library.
+I do plan to find an easier method for the user in future builds, though.
+```
 ##### Installing
 ```
 Given that this is in pre-alpha, i do not have installation instructions yet. 
@@ -32,7 +40,7 @@ In the meantime, i am very much open to suggestions, comments or pull requests.
 ##### Version
 ```
 The current version is a loose reflection of the state of the program. 
-Formal release is scheduled for late May of this year, and will then be a more
+Formal release is scheduled for later this year, and will then be a more
 accurate representation of updates.
 ```
 ### Considerations
