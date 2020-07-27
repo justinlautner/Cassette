@@ -118,6 +118,7 @@ public class Controller implements Initializable {
            # See problematic frame for where to report the bug.
            #
         *  thus, i have tested to see if music has been loaded first, and placed it after directory added if not.
+        *  This is apparently not relevant in windows, but only on linux machines.
         * */
         /*if (isMusicLoaded){
             playlist = new Playlist(Controller.this, playlistScene, primaryStage, volumeSlider, playButton, seekSlider, startSeekLabel, endSeekLabel);
