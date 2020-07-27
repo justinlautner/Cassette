@@ -26,8 +26,10 @@ Do you ever feel like the slog heap of available music players are all missing a
 ##### Prerequisites
 ```
 An installation of VLC is required to use this program.
-Ensure that the version you have is in accordance with your architecture(64 bit OS = 64 bit VLC)
-This is currently required by the JNA library, though i plan to find an easier method for the user in future builds.
+Ensure that the version you have is in accordance with your architecture(64 bit OS = 64 bit VLC).
+VLC can be installed here: https://www.videolan.org/vlc/
+This is currently required by the JNA library.
+I do plan to find an easier method for the user in future builds, though.
 ```
 ##### Installing
 ```
