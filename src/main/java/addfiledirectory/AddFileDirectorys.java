@@ -113,6 +113,7 @@ public class AddFileDirectorys extends Thread {
             ex.printStackTrace();
         }
 
+        //TODO: user must enter into the directory for it to be chosen, cannot just click it and apply
         MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane);
         musicScene.setMusicScene();
 

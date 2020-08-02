@@ -49,6 +49,7 @@ public class MusicScene {
 
     //TODO: Program takes 21 seconds to start, loading 10k plus songs. I can do better!
     //TODO: Create dynamic album lines, so that there is not a < album sized gap before moving one up
+    //TODO: Cannot play song/add to playlist after choosing a library for the first time, must close and reopen first
 
     //THIS IS FOR LOAD DIRECTORY
     public MusicScene(VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane, Playlist playlist){
