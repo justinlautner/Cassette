@@ -314,7 +314,7 @@ public class MusicScene {
                     }
 
                     if (mouseEvent.getButton() == MouseButton.SECONDARY){
-                        getContextMenu();
+                        //getContextMenu();
                     }
 
                 });//end setOnMouseClicked() listener
