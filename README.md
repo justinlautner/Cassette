@@ -17,6 +17,7 @@ Do you ever feel like the slog heap of available music players are all missing a
 - Plays: AAC, Mp3, Mp4, Wav, Flac.
 - Tags: Mp3, Mp4 (Mp4 audio, M4a and M4p audio) Ogg Vorbis, Flac, Wav, Aif, Dsf and Wma.
 - Looking to expand these in future releases.
+- Plus a whole lot more thanks to VLC: https://wiki.videolan.org/VLC_Features_Formats/
 ```
 ### Screenshots
 ![Album Cover View](screenshots/Cassette_Album_View_Dropdown_2.png "A small taste of what is to come")
