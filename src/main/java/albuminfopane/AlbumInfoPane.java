@@ -1,5 +1,6 @@
 package albuminfopane;
 
+import javafx.scene.paint.Color;
 import music.Song;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,17 +77,20 @@ public class AlbumInfoPane implements Initializable {
         albumImage.setImage(image);
     }
 
-    public void setStyle(String colorHex){
+    public void setPaneStyle(String colorHex){
 
+        System.out.println(colorHex);
+
+        tableViewLeft.setStyle("-fx-text-fill: " + colorHex);
         gridPane.setStyle("-fx-background-color: " + colorHex);
         anchorPane.setStyle("-fx-background-color: " + colorHex);
 
-        trackLeft.setStyle("-fx-background-color: " + colorHex);
-        titleLeft.setStyle("-fx-background-color: " + colorHex);
-        lengthLeft.setStyle("-fx-background-color: " + colorHex);
-        trackRight.setStyle("-fx-background-color: " + colorHex);
-        titleRight.setStyle("-fx-background-color: " + colorHex);
-        lengthRight.setStyle("-fx-background-color: " + colorHex);
+        trackLeft.setStyle("-fx-text-background-color: " + changeColorShade(colorHex) + ";" + " -fx-background-color: " + colorHex + ";");
+        titleLeft.setStyle("-fx-text-background-color: " + changeColorShade(colorHex) + ";" + " -fx-background-color: " + colorHex + ";");
+        lengthLeft.setStyle("-fx-text-background-color: " + changeColorShade(colorHex) + ";" + " -fx-background-color: " + colorHex + ";");
+        trackRight.setStyle("-fx-text-background-color: " + changeColorShade(colorHex) + ";" + " -fx-background-color: " + colorHex + ";");
+        titleRight.setStyle("-fx-text-background-color: " + changeColorShade(colorHex) + ";" + " -fx-background-color: " + colorHex + ";");
+        lengthRight.setStyle("-fx-text-background-color: " + changeColorShade(colorHex) + ";" + " -fx-background-color: " + colorHex + ";");
 
         //-fx-selection-bar: #454545; for later?
         tableViewLeft.setStyle("-fx-selection-bar-non-focused: transparent; -fx-box-border: " + colorHex + ";");
@@ -156,6 +160,29 @@ public class AlbumInfoPane implements Initializable {
             });
             return row ;
         });
+    }
+
+    private String changeColorShade(String colorHex){
+        Color color = Color.valueOf(colorHex);
+        /*double RED = color.getRed();
+        double GREEN = color.getGreen();
+        double BLUE = color.getBlue();*/
+        //double[] colorWheel = new double[color.getRed(), color.getGreen(), color.getBlue()];
+        ArrayList<Double> colorWheel = new ArrayList<>();
+        colorWheel.add(color.getRed());
+        colorWheel.add(color.getGreen());
+        colorWheel.add(color.getBlue());
+        for (int i = 0; i < colorWheel.size(); i++){
+            double temp = colorWheel.get(i);
+            temp += (temp * .3);
+            if (temp > 1){
+                temp = temp - 1;
+            }
+            colorWheel.set(i, temp);
+        }
+        System.out.println((colorWheel.get(0) * 255) + ":" + (colorWheel.get(1) * 255) + ":" + (colorWheel.get(2) * 255));
+        System.out.println(String.format("#%02x%02x%02x", (int) (colorWheel.get(0) * 255), (int) (colorWheel.get(1) * 255), (int) (colorWheel.get(2) * 255)));
+        return String.format("#%02x%02x%02x", (int) (colorWheel.get(0) * 255), (int) (colorWheel.get(1) * 255), (int) (colorWheel.get(2) * 255));
     }
 
 }//end Controller Class

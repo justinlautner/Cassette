@@ -8,7 +8,7 @@
 }
 .table-column {
   -fx-alignment: CENTER;
-  -fx-text-fill: white;
+  //-fx-text-fill: white;
 }
 .table-view *.increment-button,
 .table-view *.decrement-button,
@@ -18,8 +18,8 @@
     -fx-padding: 0;
     -fx-shape: "";
 }
-.table-row-cell:selected {
+/*.table-row-cell:selected {
    -fx-background-color: #7a330d;
-   -fx-text-background-color:  #6622CC;
+   -fx-text-background-color:  #6622CC; //This changed text color in selected rows... How to edit programmatically?
    -fx-table-cell-border-color: #7a330d;
-}
+}*/
