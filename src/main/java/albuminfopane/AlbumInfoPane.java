@@ -162,26 +162,40 @@ public class AlbumInfoPane implements Initializable {
         });
     }
 
+    //TODO: Experiment with color values to get most readable palette for majority of albums
     private String changeColorShade(String colorHex){
+        //Get lighter or darker shade of album color so that text is always readable
         Color color = Color.valueOf(colorHex);
-        /*double RED = color.getRed();
-        double GREEN = color.getGreen();
-        double BLUE = color.getBlue();*/
-        //double[] colorWheel = new double[color.getRed(), color.getGreen(), color.getBlue()];
+
+        //Change shade of all color palettes: RGB
         ArrayList<Double> colorWheel = new ArrayList<>();
         colorWheel.add(color.getRed());
         colorWheel.add(color.getGreen());
         colorWheel.add(color.getBlue());
-        for (int i = 0; i < colorWheel.size(); i++){
-            double temp = colorWheel.get(i);
-            temp += (temp * .3);
-            if (temp > 1){
-                temp = temp - 1;
-            }
-            colorWheel.set(i, temp);
+
+        //Ensure that brighter colors (>.5) get darker
+        if (colorWheel.get(0) > .5){
+            do {
+                for (int j = 0; j < colorWheel.size(); j++){
+                    //Darken red, green, and blue equally to ensure result is a different shade of the same color
+                    double temp2 = colorWheel.get(j) - (colorWheel.get(j) * .5);
+                    colorWheel.set(j, temp2);
+                }
+                //Catch and fix situations where color is STILL too bright and unreadable, darken another time
+            } while (colorWheel.get(0) > .75 || colorWheel.get(1) > .75 || colorWheel.get(2) > .75);
         }
-        System.out.println((colorWheel.get(0) * 255) + ":" + (colorWheel.get(1) * 255) + ":" + (colorWheel.get(2) * 255));
-        System.out.println(String.format("#%02x%02x%02x", (int) (colorWheel.get(0) * 255), (int) (colorWheel.get(1) * 255), (int) (colorWheel.get(2) * 255)));
+        //Ensure that darker colors (<.5) get brighter
+        else if (colorWheel.get(0) < .5){
+            do {
+                //Brighten red, green, and blue equally to ensure result is a different shade of the same color
+                for (int j = 0; j < colorWheel.size(); j++){
+                    double temp2 = colorWheel.get(j) + (colorWheel.get(j) * .5);
+                    colorWheel.set(j, temp2);
+                }
+                //Catch and fix situations where color is STILL too dark and unreadable, brighten another time
+            } while (colorWheel.get(0) < .25 || colorWheel.get(1) < .25 || colorWheel.get(2) < .25);
+        }
+
         return String.format("#%02x%02x%02x", (int) (colorWheel.get(0) * 255), (int) (colorWheel.get(1) * 255), (int) (colorWheel.get(2) * 255));
     }
 
