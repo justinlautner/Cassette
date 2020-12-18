@@ -7,11 +7,24 @@
     -fx-background-color: #454545;
     -fx-text-fill: white;
 }
-.menu, .label, .context-menu, .menu-item, .menu-bar, VBox
+.menu, .context-menu, .menu-item, .menu-bar, VBox
 {
     -fx-background-color: #2c2c2c;
     -fx-text-fill: white;
 }
+
+/*Ensures menu items highlight upon mouseover*/
+.label
+{
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-padding: 0em;
+}
+.menu-item:focused, .menu:hover, .menu:showing {
+    -fx-background:  #7a330d;
+    -fx-background-color:  #7a330d;
+}
+
 .toggle-button
 {
     -fx-background-color: #2c2c2c;
