@@ -22,9 +22,11 @@ import java.nio.file.Paths;
 import java.text.Collator;
 import java.util.*;
 
-public class AddFileDirectorys extends Thread {
+public class AddFileDirectorys implements Runnable {
 
     private File chosenDirectory;
+    private boolean chosenDirectoryBool = false;
+    private MusicScene musicScene;
     private VBox vBox;
     private FlowPane flowPane;
     private ScrollPane scrollPane;
@@ -39,6 +41,17 @@ public class AddFileDirectorys extends Thread {
     public AddFileDirectorys(File file, VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane){
 
         this.chosenDirectory = file;
+        chosenDirectoryBool = true;
+        this.vBox = vBox;
+        this.flowPane = flowPane;
+        this.progressBar = progressBar;
+        this.scrollPane = scrollPane;
+
+    }
+
+    public AddFileDirectorys(MusicScene musicScene, VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane){
+
+        this.musicScene = musicScene;
         this.vBox = vBox;
         this.flowPane = flowPane;
         this.progressBar = progressBar;
@@ -47,11 +60,21 @@ public class AddFileDirectorys extends Thread {
     }
 
     public void run(){
-        Platform.runLater(this::populatePlayer);
+        populatePlayer();
     }
 
     public void populatePlayer() {
         System.out.println("PROCESS BEGIN");
+        if (chosenDirectoryBool){
+            addDirectories();
+        }
+        else{
+            rescan();
+        }
+
+    }
+
+    private void addDirectories(){
         try{
             Path pathToDirectories = Paths.get("src/main/resources/saves/directories.txt");
             if (Files.exists(pathToDirectories)){
@@ -114,9 +137,46 @@ public class AddFileDirectorys extends Thread {
         }
 
         //TODO: user must enter into the directory for it to be chosen, cannot just click it and apply
-        MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane);
-        musicScene.setMusicScene();
+    }
 
+    private void rescan(){
+        Path pathToDirectories = Paths.get("src/main/resources/saves/directories.txt");
+
+        try{
+            Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
+            Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
+            List<String> listOfDirectories = Files.readAllLines(pathToDirectories);
+            System.out.println("NO ALBUM OR SONG SAVE FILE FOUND");
+            for (String string: listOfDirectories){
+                getMusic(new File(string));
+            }
+            setMusic();
+
+            File albumsFile = new File(savedAlbums.toString());
+            File songsFile = new File(savedSongs.toString());
+            FileOutputStream songsOutputStream = new FileOutputStream(songsFile);
+            FileOutputStream albumsOutputStream = new FileOutputStream(albumsFile);
+            ObjectOutputStream albumsOut = new ObjectOutputStream(albumsOutputStream);
+            ObjectOutputStream songsOut = new ObjectOutputStream(songsOutputStream);
+
+            songsOut.writeObject(songLinkedList);
+            albumsOut.writeObject(albumLinkedList);
+
+            albumsOut.flush();
+            songsOut.flush();
+            albumsOut.close();
+            songsOut.close();
+            songsOutputStream.flush();
+            songsOutputStream.close();
+            albumsOutputStream.flush();
+            albumsOutputStream.close();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        musicScene.setMusicScene();
     }
 
     private void getMusic(File file) {

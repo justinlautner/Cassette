@@ -159,6 +159,13 @@ public class Controller implements Initializable {
 
     }
 
+    @FXML
+    private void rescanLibrary(){
+        AddFileDirectorys addFileDirectorys = new AddFileDirectorys(musicScene, vBox, flowPane, progressBar, scrollPane);
+        Thread thread = new Thread(addFileDirectorys);
+        thread.start();
+    }
+
     public void setNowPlaying(String songName, String artistName, String albumName, Image image){
 
         Platform.runLater(() -> {
