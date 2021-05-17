@@ -3,6 +3,7 @@ package mainpackage;
 import albuminfopane.AlbumInfoPane;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
 import javafx.scene.control.*;
@@ -26,12 +27,13 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class MusicScene {
+public class MusicScene implements Initializable {
 
     private VBox vBox;
     private FlowPane flowPane;
@@ -46,10 +48,18 @@ public class MusicScene {
     private Pane pane;
     private boolean albumIsOpen;
     private Playlist playlist;
+    private ContextMenu musicContextMenu = new ContextMenu();
+    private MenuItem editTags = new MenuItem();
+    private MenuItem addToPlaylist = new MenuItem();
 
     //TODO: Program takes 21 seconds to start, loading 10k plus songs. I can do better!
     //TODO: Create dynamic album lines, so that there is not a < album sized gap before moving one up
     //TODO: Cannot play song/add to playlist after choosing a library for the first time, must close and reopen first
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
 
     //THIS IS FOR LOAD DIRECTORY
     public MusicScene(VBox vBox, FlowPane flowPane, ProgressBar progressBar, ScrollPane scrollPane, Playlist playlist){
@@ -60,6 +70,12 @@ public class MusicScene {
         this.scrollPane = scrollPane;
         this.playlist = playlist;
         playlist.initializePlaylist();
+        // Set context menu here, rather than in initialize.
+        // Does not work in that location,
+        // i suspect due to that being ran before the scene is created?
+        editTags.setText("Edit Tags");
+        addToPlaylist.setText("Add To Playlist");
+        musicContextMenu.getItems().addAll(editTags, addToPlaylist);
 
         System.out.println("PROCESS BEGIN");
         try{
@@ -275,7 +291,7 @@ public class MusicScene {
                                     tempImage = new Image(new BufferedInputStream(new ByteArrayInputStream(tag.getFirstArtwork().getBinaryData())), 1, 1, true, true);
                                 }
                                 pane.setStyle("-fx-background-color: " + convertRGBToHex(tempImage));
-                                controller.setStyle(convertRGBToHex(tempImage));
+                                controller.setPaneStyle(convertRGBToHex(tempImage));
 
                                 //Set and determine width of album info pane, and add a listener in case the entire window changes size
                                 controller.setFlowPane(album.getAlbum());
@@ -313,8 +329,9 @@ public class MusicScene {
                         }
                     }
 
-                    if (mouseEvent.getButton() == MouseButton.SECONDARY){
-                        //getContextMenu();
+                    if (mouseEvent.getSource() == button && mouseEvent.getClickCount() == 1 && mouseEvent.getButton() == MouseButton.SECONDARY){
+                        //TODO: need to add context menu functionality to albuminfopane
+                        musicContextMenu.show(scrollPane, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                     }
 
                 });//end setOnMouseClicked() listener
