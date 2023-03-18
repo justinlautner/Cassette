@@ -19,6 +19,10 @@ hs_err_pid*
 #IntelliJ
 *.iml
 .idea/
+*iml
+.gradle.xml
+*.iws
+*.ipr
 
 #Generated Files
 out/
