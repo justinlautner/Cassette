@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import java.lang.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1425.0" stylesheets="@../styles/generalStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mainpackage.Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="775.0" prefWidth="1425.0" stylesheets="@../styles/generalStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.Controller">
     <children>
         <BorderPane fx:id="borderPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
@@ -16,6 +29,7 @@
                         <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                             <items>
                                 <MenuItem fx:id="addFilesItem" mnemonicParsing="false" onAction="#addFiles" text="Add Files to Library" />
+                        <MenuItem fx:id="linkSpotifyItem" mnemonicParsing="false" onAction="#linkSpotify" text="Link Spotify..." />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Edit">
@@ -35,7 +49,10 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Tools">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Your Library..." />
+                                <MenuItem mnemonicParsing="false" text="Library Manager" />
+                        <MenuItem fx:id="spotifyManager" mnemonicParsing="false" text="Spotify Manager" />
+                        <MenuItem fx:id="rescanLibraryItem" mnemonicParsing="false" onAction="#rescanLibrary" text="Rescan Library" />
+                        <MenuItem fx:id="clearMusicCache" mnemonicParsing="false" onAction="#clearMusicCache" text="Clear Music Cache" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Help">
@@ -57,8 +74,13 @@
                                 <Label fx:id="albumLabel" />
                             </children>
                         </VBox>
-                        <HBox prefHeight="58.0" prefWidth="330.0">
+                        <HBox prefHeight="58.0" prefWidth="375.0">
                             <children>
+                        <ImageView fx:id="loadingAnimation" fitHeight="56.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" visible="false" HBox.hgrow="ALWAYS">
+                           <image>
+                              <Image url="@../images/Spinner-1s-200px.gif" />
+                           </image>
+                        </ImageView>
                                 <Button fx:id="previousTrackButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" onMouseClicked="#pressPreviousTrack" prefHeight="58.0" prefWidth="50.0" />
                                 <Button fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" onMouseClicked="#pressPlay" prefHeight="58.0" prefWidth="50.0" />
                                 <Button fx:id="stopButton" maxHeight="58.0" maxWidth="50.0" minHeight="58.0" minWidth="50.0" mnemonicParsing="false" onMouseClicked="#pressStop" prefHeight="58.0" prefWidth="50.0" />
@@ -66,15 +88,15 @@
                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
                                         <ToggleButton fx:id="toggleViewButton" mnemonicParsing="false" onMouseClicked="#toggleViewButtonOnClick" text="ToggleButton" />
-                                        <Slider fx:id="volumeSlider" value="100.0" />
+                                        <Slider fx:id="volumeSlider" prefWidth="114.0" value="100.0" />
                                     </children>
                                 </VBox>
                             </children>
                         </HBox>
-                  <HBox>
+                  <HBox HBox.hgrow="ALWAYS">
                      <children>
                         <Label fx:id="startSeekLabel" text="0:00" />
-                        <Slider fx:id="seekSlider" onMouseDragged="#userSeek" onMouseReleased="#userSeek" prefWidth="500.0" />
+                        <Slider fx:id="seekSlider" onMouseDragged="#userSeek" onMouseReleased="#userSeek" HBox.hgrow="ALWAYS" />
                         <Label fx:id="endSeekLabel" text="0:00" />
                      </children>
                   </HBox>

@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="1155.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="albuminfopane.AlbumInfoPane">
+<AnchorPane fx:id="anchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="1155.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.AlbumInfoPane">
     <children>
         <ImageView fx:id="albumImage" cache="true" fitHeight="300.0" fitWidth="300.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1281.0" AnchorPane.topAnchor="40.0" />
         <GridPane fx:id="gridPane" layoutX="308.0" layoutY="39.0" prefHeight="307.0" prefWidth="847.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="309.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
