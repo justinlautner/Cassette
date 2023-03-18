@@ -2,7 +2,7 @@
   <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="MAIN_CLASS_NAME" value="mainpackage.Main" />
+    <option name="MAIN_CLASS_NAME" value="Main" />
     <module name="Cassette" />
     <option name="VM_PARAMETERS" value="--module-path /usr/share/openjfx/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics -ea -Xmx2048m" />
     <RunnerSettings RunnerId="Debug with VisualVM">

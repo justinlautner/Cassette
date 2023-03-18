@@ -1,16 +1,14 @@
-package musicplayer;
+package models;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import mainpackage.Controller;
-import music.Song;
+import views.Controller;
+import models.Song;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -19,10 +17,9 @@ import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-import org.jnativehook.keyboard.NativeKeyAdapter;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
-import playlistscene.PlaylistScene;
+import views.PlaylistScene;
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
 import uk.co.caprica.vlcj.media.MediaRef;
 import uk.co.caprica.vlcj.media.TrackType;
@@ -90,6 +87,27 @@ public class Playlist {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        NativeKeyListener nativeKeyListener = new NativeKeyListener() {
+            @Override
+            public void nativeKeyTyped(NativeKeyEvent nativeKeyEvent) {
+                if (nativeKeyEvent.getKeyCode() == NativeKeyEvent.VC_PAUSE || nativeKeyEvent.getKeyCode() == NativeKeyEvent.VC_MEDIA_PLAY){
+                    pauseMusic();
+                }
+            }
+
+            @Override
+            public void nativeKeyPressed(NativeKeyEvent nativeKeyEvent) {
+
+            }
+
+            @Override
+            public void nativeKeyReleased(NativeKeyEvent nativeKeyEvent) {
+
+            }
+        };
+
+
     }
 
     public void addSongs(ArrayList<Song> playlist){

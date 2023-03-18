@@ -1,6 +1,5 @@
-package mainpackage;
+package views;
 
-import albuminfopane.AlbumInfoPane;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,9 +13,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import music.Album;
-import music.Song;
-import musicplayer.Playlist;
+import models.Album;
+import models.Song;
+import models.Playlist;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;

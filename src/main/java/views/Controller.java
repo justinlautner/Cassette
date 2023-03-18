@@ -1,12 +1,13 @@
-package mainpackage;
+package views;
 
-import addfiledirectory.AddFileDirectorys;
+import utils.AddFileDirectorys;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -20,8 +21,7 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import musicplayer.Playlist;
-import playlistscene.PlaylistScene;
+import models.Playlist;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,10 +45,12 @@ public class Controller implements Initializable {
     @FXML private Slider volumeSlider;
     @FXML private Slider seekSlider;
     @FXML private ImageView loadingAnimation;
+    MusicScene musicScene;
     private FlowPane flowPane;
     private PlaylistScene playlistScene;
     private Stage primaryStage;
     private Playlist playlist;
+    private boolean isMusicLoaded = false;
 
     public Controller(){}
 
@@ -63,6 +65,7 @@ public class Controller implements Initializable {
 
         this.toggleViewButton.setSelected(false);
         this.toggleViewButton.setText("Playlist View");
+        this.loadingAnimation.setVisible(false);
 
         try {
 
@@ -95,7 +98,7 @@ public class Controller implements Initializable {
         Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
         if (Files.exists(savedAlbums) & Files.exists(savedSongs)){
             //isMusicLoaded = true;
-            MusicScene musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane, playlist);
+            musicScene = new MusicScene(vBox, flowPane, progressBar, scrollPane, playlist);
             musicScene.setMusicScene();
         }
         /* Due to a bug in Java's codebase, if playlist is instantiated in initialize method or before adding songs,
@@ -132,7 +135,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void addFiles(){
+    private void addFiles() throws InterruptedException {
 
         //Open directory chooser to add files
         DirectoryChooser chooser = new DirectoryChooser();
@@ -152,8 +155,20 @@ public class Controller implements Initializable {
 
         //If user chose a folder, commence music search
         if (chosenFolder != null){
+            //Show loading animation does not work
+            Platform.runLater(() -> {
+                loadingAnimation.setVisible(true);
+            });
             AddFileDirectorys addFileDirectorys = new AddFileDirectorys(chosenFolder, vBox, flowPane, progressBar, scrollPane);
-            addFileDirectorys.start();
+            Thread thread = new Thread(addFileDirectorys);
+            thread.start();
+            Platform.runLater(() -> {
+                loadingAnimation.setVisible(false);
+            });
+
+           /* playlist = new Playlist(Controller.this, playlistScene, primaryStage, volumeSlider, playButton, seekSlider, startSeekLabel, endSeekLabel);
+
+            playlistScene.setPlaylist(playlist);*/
         }
 
 
@@ -250,5 +265,31 @@ public class Controller implements Initializable {
     private void userSeek(){
         float pos = (float) seekSlider.getValue();
         playlist.seek(pos);
+    }
+
+    @FXML
+    private void linkSpotify() throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SpotifyLogin.fxml"));
+        Parent spotify = loader.load();
+        Stage spotifyStage = new Stage();
+        spotifyStage.setScene(new Scene(spotify));
+        spotifyStage.setTitle("Link Spotify...");
+        spotifyStage.show();
+    }
+
+    @FXML
+    private void clearMusicCache(){
+        Path pathToDirectories = Paths.get("src/main/resources/saves/directories.txt");
+        Path savedAlbums = Paths.get("src/main/resources/saves/albums.txt");
+        Path savedSongs = Paths.get("src/main/resources/saves/songs.txt");
+
+        File directory = new File(pathToDirectories.toString());
+        File albumsFile = new File(savedAlbums.toString());
+        File songsFile = new File(savedSongs.toString());
+
+        directory.delete();
+        albumsFile.delete();
+        songsFile.delete();
     }
 }

@@ -1,4 +1,4 @@
-package playlistscene;
+package models;
 
 public class PlaylistSongDisplay {
 

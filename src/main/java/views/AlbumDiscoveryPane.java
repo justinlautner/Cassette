@@ -1,4 +1,4 @@
-package mainpackage;
+package views;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

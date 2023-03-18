@@ -1,4 +1,4 @@
-package playlistscene;
+package views;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -10,8 +10,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
-import music.Song;
-import musicplayer.Playlist;
+import models.PlaylistSongDisplay;
+import models.Song;
+import models.Playlist;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="spotifyPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../styles/generalStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="spotify.SpotifyController">
+   <children>
+      <TextField fx:id="spotifyUser" layoutX="215.0" layoutY="221.0" onKeyTyped="#passMask" promptText="Enter Spotify Username..." />
+      <TextField fx:id="spotifyPass" layoutX="215.0" layoutY="269.0" promptText="Enter Sptofiy Password..." />
+      <Button fx:id="spotifyEnterButton" layoutX="222.0" layoutY="337.0" mnemonicParsing="false" onAction="#spotifyAuthorization" prefHeight="26.0" prefWidth="156.0" text="Send that bad boi" />
+      <ImageView fx:id="spotifyLogo" fitHeight="150.0" fitWidth="200.0" layoutX="225.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/spotify_logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

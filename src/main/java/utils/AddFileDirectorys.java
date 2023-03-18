@@ -1,9 +1,8 @@
-package addfiledirectory;
+package utils;
 
-import mainpackage.MusicScene;
-import music.Album;
-import music.Song;
-import javafx.application.Platform;
+import views.MusicScene;
+import models.Album;
+import models.Song;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import org.jaudiotagger.audio.AudioFile;

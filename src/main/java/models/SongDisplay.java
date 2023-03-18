@@ -1,4 +1,4 @@
-package albuminfopane;
+package models;
 
 public class SongDisplay {
 
