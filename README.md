@@ -33,7 +33,7 @@ Ensure that the version you have is in accordance with your architecture(64 bit 
 
 VLC can be installed [here](https://www.videolan.org/vlc/)
 
-Alternatively, in Ubuntu based systems use the command
+For users on Ubuntu based systems, use the command
 ```
 sudo apt install vlc
 ```
@@ -49,7 +49,7 @@ In the meantime, i am very much open to suggestions, comments or pull requests.
 ### Version
 
 The current version is a loose reflection of the state of the program. 
-Formal release is scheduled for later this year, and will then be a more
+Formal release is scheduled for [at some point, hopefully], and will then be a more
 accurate representation of updates.
 
 ## Considerations
