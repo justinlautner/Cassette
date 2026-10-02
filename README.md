@@ -33,7 +33,7 @@ Ensure that the version you have is in accordance with your architecture(64 bit 
 
 VLC can be installed [here](https://www.videolan.org/vlc/)
 
-Alternatively, in Ubuntu based systems use the command
+For users on Ubuntu based systems, use the command
 ```
 sudo apt install vlc
 ```
