@@ -42,26 +42,18 @@ I do plan to find an easier method for the user in future builds, though.
 
 ### Installing
 
-Given that this is in pre-alpha, i do not have installation instructions yet. 
-If this interests you, star this bad boy and come back soon!
-In the meantime, i am very much open to suggestions, comments or pull requests.
+I do not have installation instructions yet.
 
 ### Version
 
-The current version is a loose reflection of the state of the program. 
-Formal release is scheduled for [at some point, hopefully], and will then be a more
-accurate representation of updates.
+The current version is a loose reflection of the state of the program.
 
 ## Considerations
 ### Authors
 
-Me, of course! Just me, as of now.
+Just me.
 
 - Justin Lautner <jlautner@protonmail.com>
-
-Have any questions or concerns? Feel free to shoot me an e-mail.
-
-Want to send me a personalized hate message straight to my inbox? I'm all ears!
 
 ### License
 
@@ -80,6 +72,4 @@ Inspired by...
 [Clementine Media Player](https://github.com/clementine-player/Clementine)
 
 [MusicBee](https://getmusicbee.com)
-
-God bless these creators.
 
